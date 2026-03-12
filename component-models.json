@@ -449,6 +449,14 @@
         ]
       },
       {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Background Image",
+        "description": "Optional background image for this section.",
+        "multi": false
+      },
+      {
         "component": "boolean",
         "valueType": "boolean",
         "name": "sec-full-width",
