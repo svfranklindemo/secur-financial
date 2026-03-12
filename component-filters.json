@@ -74,6 +74,7 @@
   {
     "id": "column",
     "components": [
+      "action-button",
       "button",
       "image",
       "text",      
