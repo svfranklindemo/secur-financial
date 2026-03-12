@@ -225,12 +225,15 @@
   display: block;
   overflow: hidden;
   min-height: 220px;
+  min-width: 0;
 }
 .cards > ul > li.image-left .cards-card-body {
-  /*flex: 0 0 50%;*/
+  flex: 0 0 50%;
+  min-width: 0;
+  box-sizing: border-box;
   padding: 0;
   margin: 10px 20px;
-  display: inline-flex;
+  display: flex;
   align-items: center;
 }
 .cards > ul > li.image-left .cards-card-body h1 {
@@ -276,12 +279,15 @@
   display: block;
   overflow: hidden;
   min-height: 220px;
+  min-width: 0;
 }
 .cards > ul > li.image-right .cards-card-body {
-  /*flex: 0 0 50%;*/
+  flex: 0 0 50%;
+  min-width: 0;
+  box-sizing: border-box;
   padding: 0;
   margin: 10px 20px;
-  display: inline-flex;
+  display: flex;
   align-items: center;
 }
 .cards > ul > li.image-right .cards-card-body h1 {
