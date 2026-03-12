@@ -872,6 +872,19 @@ main .section.bg-light {
   color: var(--text-color);
 }
 
+/* Section text color (UE field, same pattern as hero) */
+main .section.section--custom-text-color h1,
+main .section.section--custom-text-color h2,
+main .section.section--custom-text-color h3,
+main .section.section--custom-text-color h4,
+main .section.section--custom-text-color h5,
+main .section.section--custom-text-color h6,
+main .section.section--custom-text-color p,
+main .section.section--custom-text-color a,
+main .section.section--custom-text-color li {
+  color: var(--section-text-color);
+}
+
 /* Section background image */
 /* main .section.bg-image {
   overflow: hidden;

@@ -522,9 +522,41 @@ function decorateSections(main) {
         }
       });
       sectionMeta.parentNode.remove();
+
+      // Section text color from UE field (same pattern as hero; key may be sec-color or section-text-color from label)
+      applySectionTextColor(section, meta['sec-color'] ?? meta['section-text-color']);
     }
     applySectionItemWidths(section);
   });
+}
+
+/**
+ * Applies section text color from UE field (hex). Sets --section-text-color and class section--custom-text-color.
+ * @param {Element} section The section element
+ * @param {string} colorValue Hex color (e.g. #fff or fff)
+ */
+function applySectionTextColor(section, colorValue) {
+  const isHexColor = (s) => {
+    const t = String(s).trim();
+    if (!t) return false;
+    if (t.startsWith('#')) return /^#[0-9a-fA-F]{3}$|^#[0-9a-fA-F]{6}$/.test(t);
+    return /^[0-9a-fA-F]{3}$|^[0-9a-fA-F]{6}$/.test(t);
+  };
+  const toHex = (s) => {
+    const t = String(s).trim();
+    if (t.startsWith('#')) return t;
+    return /^[0-9a-fA-F]{3}$|^[0-9a-fA-F]{6}$/.test(t) ? `#${t}` : t;
+  };
+  const raw = (colorValue ?? section.dataset.secColor ?? section.dataset.sectionTextColor ?? '').toString().trim();
+  section.classList.remove('section--custom-text-color');
+  section.style.removeProperty('--section-text-color');
+  if (raw && isHexColor(raw)) {
+    section.style.setProperty('--section-text-color', toHex(raw));
+    section.classList.add('section--custom-text-color');
+    section.dataset.secColor = raw;
+  } else {
+    delete section.dataset.secColor;
+  }
 }
 
 /**
@@ -651,10 +683,18 @@ function setupSectionItemWidthsUE() {
         section.dataset.secItemWidths = String(val);
         applySectionItemWidths(section);
       }
+      const colorVal = content['sec-color'] ?? content.secColor ?? content['section-text-color'] ?? content.sectionTextColor ?? '';
+      applySectionTextColor(section, colorVal);
     }
-    if (event.type === 'aue:content-patch' && event.detail?.patch?.name === 'sec-item-widths') {
-      section.dataset.secItemWidths = String(event.detail.patch.value || '');
-      applySectionItemWidths(section);
+    if (event.type === 'aue:content-patch') {
+      const patch = event.detail?.patch;
+      if (patch?.name === 'sec-item-widths') {
+        section.dataset.secItemWidths = String(patch.value || '');
+        applySectionItemWidths(section);
+      }
+      if (patch?.name === 'sec-color') {
+        applySectionTextColor(section, patch.value ?? '');
+      }
     }
   };
   document.body.addEventListener('aue:content-details', handler);

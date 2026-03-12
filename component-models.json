@@ -449,6 +449,14 @@
         ]
       },
       {
+        "component": "text",
+        "valueType": "string",
+        "name": "sec-color",
+        "value": "",
+        "label": "Section text color",
+        "description": "Hex color for section text (e.g. #fff or #000000). Leave empty for default."
+      },
+      {
         "component": "reference",
         "valueType": "string",
         "name": "image",

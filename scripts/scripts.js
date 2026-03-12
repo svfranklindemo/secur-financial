@@ -184,31 +184,9 @@ function decorateSectionImages(doc) {
     const fallbackImg = img({ src: desktopSrc, alt: '', class: 'sec-img', loading: 'lazy' });
     pic.appendChild(fallbackImg);
 
-    // Mark and insert as first child
+    // Mark and insert as first child (no height set; section height follows content/CSS)
     section.classList.add('section-has-bg');
     section.prepend(pic);
-
-    // Compute and lock section height to image height (based on current width)
-    const updateHeight = () => {
-      if (fallbackImg.naturalWidth > 0 && fallbackImg.naturalHeight > 0) {
-        const ratio = fallbackImg.naturalHeight / fallbackImg.naturalWidth;
-        const width = section.getBoundingClientRect().width;
-        const height = Math.round(width * ratio);
-        section.style.minHeight = '';
-        section.style.height = `${height}px`;
-      }
-    };
-
-    if (fallbackImg.complete) {
-      updateHeight();
-    } else {
-      fallbackImg.addEventListener('load', updateHeight, { once: true });
-    }
-
-    // Recalculate on viewport changes
-    const onResize = () => updateHeight();
-    window.addEventListener('resize', onResize);
-    window.addEventListener('orientationchange', onResize);
   });
 }
 
