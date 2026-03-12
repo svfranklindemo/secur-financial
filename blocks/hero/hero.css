@@ -494,6 +494,12 @@ picture {
   padding: 20px;
   background: rgb(0 0 0 / 50%);
 }
+.hero.image-background-text-left div:nth-child(2){
+   margin-left: 15%; 
+}
+.hero.image-background-text-right div:nth-child(2){
+  margin-right: 15%;
+}
 
 /*button theme hero specific*/
 .hero.block.overlay .button-container.cta-link a.button,.hero.image-background-text-left .button-container.cta-link a.button,.hero.image-background-text-right .button-container.cta-link a.button {
