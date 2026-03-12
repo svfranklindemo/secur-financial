@@ -538,9 +538,20 @@ function applySectionItemWidths(section) {
   const raw = (section.dataset?.secItemWidths
     || section.getAttribute('data-sec-item-widths')
     || '').trim();
-  let sectionChildren = [...section.children].filter((el) => !el.classList?.contains('section-metadata'));
-  let inner = section.querySelector('.default-content-wrapper') || section.firstElementChild;
+  const isSectionBg = (el) => el.tagName === 'PICTURE' && el.classList?.contains('section-bg');
+  let sectionChildren = [...section.children].filter((el) =>
+    !el.classList?.contains('section-metadata') && !isSectionBg(el));
+  let inner = section.querySelector('.default-content-wrapper') || sectionChildren[0];
   if (!inner) return;
+
+  const clearWidths = (el) => {
+    if (!el) return;
+    el.style.flex = '';
+    el.style.maxWidth = '';
+    el.style.boxSizing = '';
+  };
+  const bgPic = section.querySelector('picture.section-bg');
+  if (bgPic) clearWidths(bgPic);
 
   const widths = raw ? raw.split(',')
     .map((s) => parseInt(s.trim(), 10))
@@ -559,17 +570,12 @@ function applySectionItemWidths(section) {
       const idx = sectionChildren.indexOf(dcw);
       newWrappers.forEach((w) => section.insertBefore(w, dcw));
       dcw.remove();
-      sectionChildren = [...section.children].filter((el) => !el.classList?.contains('section-metadata'));
-      inner = section.firstElementChild;
+      sectionChildren = [...section.children].filter((el) =>
+        !el.classList?.contains('section-metadata') && !isSectionBg(el));
+      inner = section.querySelector('.default-content-wrapper') || sectionChildren[0];
     }
   }
 
-  const clearWidths = (el) => {
-    if (!el) return;
-    el.style.flex = '';
-    el.style.maxWidth = '';
-    el.style.boxSizing = '';
-  };
   const clearSectionFlex = () => {
     section.style.display = '';
     section.style.flexDirection = '';
