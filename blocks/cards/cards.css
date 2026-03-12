@@ -79,12 +79,6 @@
   list-style: disc;
 }
 
-.cards .cards-card-body p, 
-.cards .cards-card-body li {
-  font-size: var(--body-font-size-xs);
-  line-height: 28px;
-}
-
 .cards .cards-card-body p > strong,
 .cards .cards-card-body h2 {
   line-height: 30px;
