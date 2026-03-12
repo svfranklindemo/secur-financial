@@ -165,6 +165,14 @@
         {
           "component": "text",
           "valueType": "string",
+          "name": "sec-custom-styles",
+          "value": "",
+          "label": "Custom class",
+          "description": "Additional CSS class name(s) for this section (space-separated for multiple). Same as hero Custom Styles."
+        },
+        {
+          "component": "text",
+          "valueType": "string",
           "name": "sec-item-widths",
           "value": "",
           "label": "Item widths (%)",
