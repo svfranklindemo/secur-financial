@@ -107,15 +107,11 @@ export default function decorate(block) {
       else if (index === 1) {
         div.className = 'cards-card-body';
       }
-      // Indices 2-12 - Card link, selectable, alignment, button actions, custom styles
-      else if (index >= 2 && index <= 12) {
+      // All other divs (config, or any extra from UE) - hidden so only image + body show in layout
+      else if (index >= 2) {
         div.className = 'cards-config';
         const p = div.querySelector('p');
         if (p) p.style.display = 'none';
-      }
-      // Any other divs
-      else {
-        div.className = 'cards-card-body';
       }
     });
     

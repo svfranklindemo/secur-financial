@@ -220,6 +220,10 @@
 .cards > ul > li.image-left .cards-config {
   display: none;
 }
+/* Hide any duplicate/empty cards-card-body so only image + one body show */
+.cards > ul > li.image-left .cards-card-body ~ .cards-card-body {
+  display: none;
+}
 .cards > ul > li.image-left .cards-card-image {
   flex: 0 0 50%;
   display: block;
@@ -272,6 +276,10 @@
   gap: 20px;
 }
 .cards > ul > li.image-right .cards-config {
+  display: none;
+}
+/* Hide any duplicate/empty cards-card-body so only image + one body show */
+.cards > ul > li.image-right .cards-card-body ~ .cards-card-body {
   display: none;
 }
 .cards > ul > li.image-right .cards-card-image {
