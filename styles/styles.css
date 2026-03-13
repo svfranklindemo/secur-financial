@@ -387,6 +387,11 @@ body.fly-theme footer a:any-link {
   --light-color: #f3f2f6;
 }
 
+body.securbank-theme ul li::marker,
+body.securbank-theme ol li::marker {
+  color: var(--main-accent-color);
+}
+
 body.securbank-theme header .nav-wrapper,
 body.securbank-theme footer {
   background-color: #fff;
