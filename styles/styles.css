@@ -1375,5 +1375,9 @@ li.credit-cards-custom.cards-card--alignment-left {
 li.image-right.credit-cards-custom.cards-card--alignment-left img {
   min-height: 400px;
 }
+li.image-left.credit-cards-custom.cards-card--alignment-left img {
+  min-height: 400px;
+}
+
 
 /*custom-classes-end*/
