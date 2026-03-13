@@ -384,6 +384,7 @@ body.fly-theme footer a:any-link {
 .securbank-theme {
   --main-accent-color: #0296a6;
   --nav-text-color: #000000;
+  --light-color: #f3f2f6;
 }
 
 body.securbank-theme header .nav-wrapper,
