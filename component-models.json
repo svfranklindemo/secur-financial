@@ -758,6 +758,10 @@
     "fields": []
   },
   {
+    "id": "get-offer",
+    "fields": []
+  },
+  {
     "id": "new-account",
     "fields": []
   },
