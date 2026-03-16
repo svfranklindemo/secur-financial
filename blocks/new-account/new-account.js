@@ -7,6 +7,7 @@
  */
 
 import { readBlockConfig, loadCSS } from '../../scripts/aem.js';
+import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 
 function applyButtonConfigToSubmitButton(block, config) {
   const submitButton = block.querySelector("form button[type='submit']");
@@ -254,8 +255,13 @@ function attachNewAccountWizardDataLayerTracking(wizard) {
     const index = event?.detail?.currStep?.index;
     const safeIndex = Number.isFinite(index) ? index : getActiveWizardStepIndex(wizard);
     updateNewAccountWizardDataLayer(safeIndex);
+    const prevIndex = Number.isFinite(event?.detail?.prevStep?.index)
+      ? event.detail.prevStep.index
+      : safeIndex - 1;
+    if (Number.isFinite(prevIndex) && safeIndex > prevIndex) {
+      dispatchCustomEvent('form-step');
+    }
   };
-
   wizard.addEventListener('wizard:navigate', handleNavigation);
   updateNewAccountWizardDataLayer(getActiveWizardStepIndex(wizard));
 }
