@@ -264,6 +264,7 @@ function attachNewAccountWizardDataLayerTracking(wizard) {
   };
   wizard.addEventListener('wizard:navigate', handleNavigation);
   updateNewAccountWizardDataLayer(getActiveWizardStepIndex(wizard));
+  dispatchCustomEvent('form-start');
 }
 
 export default async function decorate(block) {
