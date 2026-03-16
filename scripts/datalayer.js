@@ -63,6 +63,10 @@ function applyEcidToDataLayer() {
   _dataLayer._demosystem4.identification.core.ecid = ecid || _dataLayer._demosystem4.identification.core.ecid || '';
 }
 
+function syncWindowDataLayer() {
+  window.dataLayer = _dataLayer;
+}
+
 function dispatchDataLayerEvent(eventType = 'initialized') {
   document.dispatchEvent(
     new CustomEvent('dataLayerUpdated', {
@@ -85,6 +89,7 @@ function processDataLayerQueue() {
         _dataLayer = { ..._dataLayer, ...updates };
       }
     });
+    syncWindowDataLayer();
     try {
       const now = Date.now().toString();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(_dataLayer));
@@ -103,7 +108,7 @@ function processDataLayerQueue() {
  * cart: only total (Reservation-TotalValue).
  */
 function getInitialDataLayerFromDataElements() {
-  window.dataLayer = {
+  const initialDataLayer = {
     page: {},
     product: {},
     mortgage: {},
@@ -112,8 +117,12 @@ function getInitialDataLayerFromDataElements() {
       id: "securfinancial2"
     }
   };
-  window.dataLayer.partnerData = { "PartnerID": "Partner123", "mortgage_interest_rate": 7, "likely_mortgage_refinancers": 2};
-  return window.dataLayer;
+  initialDataLayer.partnerData = {
+    PartnerID: 'Partner123',
+    mortgage_interest_rate: 7,
+    likely_mortgage_refinancers: 2,
+  };
+  return initialDataLayer;
 }
 
 export function buildCustomDataLayer() {
@@ -140,6 +149,7 @@ export function buildCustomDataLayer() {
     if (!_dataLayer.page) _dataLayer.page = {};
     _dataLayer.page.title = document.title || _dataLayer.page.title;
     _dataLayer.page.name = (document.title || '').toLowerCase() || _dataLayer.page.name;
+    syncWindowDataLayer();
 
     try {
       const now = Date.now().toString();
@@ -148,20 +158,6 @@ export function buildCustomDataLayer() {
     } catch (storageError) {
       console.warn('⚠ Could not persist dataLayer:', storageError.message);
     }
-
-    Object.defineProperty(window, 'dataLayer', {
-      get() {
-        return JSON.parse(JSON.stringify(_dataLayer));
-      },
-      set() {
-        console.error(
-          '❌ Direct assignment to window.dataLayer is not allowed. Use window.updateDataLayer() instead.'
-        );
-        throw new Error('Direct modification of dataLayer is prohibited. Use updateDataLayer() method.');
-      },
-      configurable: false,
-      enumerable: true,
-    });
 
     window._dataLayerReady = true;
     processDataLayerQueue();
@@ -172,10 +168,7 @@ export function buildCustomDataLayer() {
   } catch (error) {
     console.error('Error initializing dataLayer:', error);
     _dataLayer = getInitialDataLayerFromDataElements();
-    Object.defineProperty(window, 'dataLayer', {
-      get() { return JSON.parse(JSON.stringify(_dataLayer)); },
-      set() { console.error('❌ Direct assignment to window.dataLayer is not allowed.'); },
-    });
+    syncWindowDataLayer();
     window._dataLayerReady = true;
     processDataLayerQueue();
   }
@@ -196,6 +189,7 @@ window.updateDataLayer = function (updates, merge = true) {
   } else {
     _dataLayer = { ..._dataLayer, ...updates };
   }
+  syncWindowDataLayer();
   try {
     const now = Date.now().toString();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(_dataLayer));
