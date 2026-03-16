@@ -118,7 +118,7 @@ function getInitialDataLayerFromDataElements() {
     }
   };
   initialDataLayer.partnerData = {
-    PartnerID: 'Partner123',
+    PartnerID: 'Partner123-local',
     mortgage_interest_rate: 7,
     likely_mortgage_refinancers: 2,
   };
