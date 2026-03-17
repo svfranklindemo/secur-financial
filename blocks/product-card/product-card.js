@@ -171,18 +171,19 @@ function createButtonFromConfig(config) {
 
 export default async function decorate(block) {
   const config = readBlockConfig(block);
-  [...block.children].forEach((row) => row.remove());
-  block.classList.add('product-card-block');
-  block.innerHTML = '';
-
   const ctaStyleEl = block.querySelector('p[data-aue-prop="ctastyle"]') || block.querySelector('[data-aue-prop="ctastyle"]');
   const ctaStyle = ctaStyleEl?.textContent?.trim() || 'default';
   const customStylesEl = block.querySelector('p[data-aue-prop="customstyles"]') || block.querySelector('[data-aue-prop="customstyles"]');
   const customStylesRaw = customStylesEl?.textContent?.trim() || '';
-  const ctaLink = block.querySelector('a.cta, a');
+  const firstFieldRow = block.querySelector(':scope > div:nth-child(1)');
+  const firstFieldCell = firstFieldRow?.children?.[1] ?? firstFieldRow?.children?.[0];
+  const firstFieldLink = firstFieldCell?.querySelector('a.cta, a');
+  const ctaLink = firstFieldLink || block.querySelector('a.cta, a');
+  const fieldTextValue = firstFieldLink?.textContent?.trim() || firstFieldCell?.textContent?.trim();
+  const fieldHrefValue = firstFieldLink?.href;
   const buttonConfig = createButtonFromConfig({
-    text: ctaLink?.textContent?.trim(),
-    link: ctaLink?.href,
+    text: config.text ?? fieldTextValue,
+    link: config.link ?? fieldHrefValue,
     eventType: ctaLink?.dataset?.buttonEventType,
     webhook: ctaLink?.dataset?.buttonWebhookUrl,
     formId: ctaLink?.dataset?.buttonFormId,
@@ -191,6 +192,9 @@ export default async function decorate(block) {
     customStyles: customStylesRaw,
     customAttributes: ctaLink ? { ...ctaLink.dataset } : null,
   });
+  [...block.children].forEach((row) => row.remove());
+  block.classList.add('product-card-block');
+  block.innerHTML = '';
 
   const product = await fetchProductData();
 
