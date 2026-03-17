@@ -99,6 +99,10 @@
   font-weight: 600;
 }
 
+.cards.product-card-layout-stacked {
+  padding: 20px 50px;
+}
+
 @media (width >= 900px) {
     main > .section > div.product-card-wrapper {
         padding: 0px;
