@@ -43,8 +43,8 @@
   font-size: 1rem;
   font-weight: 600;
   font-family: var(--body-font-family, system-ui, sans-serif);
-  color: #374151;
-  background: #7dd3fc;
+  color: var(--text-light, #fff);
+  background: var(--main-accent-color, #0d9488);
   border: none;
   border-radius: 9999px;
   cursor: pointer;
@@ -52,10 +52,10 @@
 }
 
 .get-offer-button:hover {
-  background: #38bdf8;
+  background: var(--main-accent-hover, var(--link-hover-color, #0f766e));
 }
 
 .get-offer-button:focus {
-  outline: 2px solid #0ea5e9;
+  outline: 2px solid var(--main-accent-color, #0ea5e9);
   outline-offset: 2px;
 }

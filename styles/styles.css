@@ -361,6 +361,7 @@ body.securbank-theme,
 body.securfinancial-theme {
   --main-accent-color: #0296a6;
   --link-hover-color: #038f9e;
+  --main-accent-hover: #027a88;
 }
 
 body.securbank-theme header .nav-wrapper,
