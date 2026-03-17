@@ -74,11 +74,14 @@ function pickProductFromResponse(payload) {
   return payload;
 }
 
-async function fetchProductData() {
+async function fetchProductData(contentFragmentPath) {
   const isAuthor = isAuthorEnvironment();
+  const pathParam = contentFragmentPath ? `path=${encodeURIComponent(contentFragmentPath)}` : '';
+  const authorPathParam = pathParam ? `;${pathParam}` : '';
+  const publishPathParam = pathParam ? `&${pathParam}` : '';
   const requestUrl = isAuthor
-    ? `${AUTHOR_PRODUCT_ENDPOINT};ts=${Date.now()}`
-    : `${PUBLISH_PRODUCT_ENDPOINT}?environment=${PUBLISH_ENVIRONMENT}&time=${Date.now()}`;
+    ? `${AUTHOR_PRODUCT_ENDPOINT};ts=${Date.now()}${authorPathParam}`
+    : `${PUBLISH_PRODUCT_ENDPOINT}?environment=${PUBLISH_ENVIRONMENT}&time=${Date.now()}${publishPathParam}`;
 
   try {
     const response = await fetch(requestUrl, {
@@ -201,18 +204,19 @@ export default async function decorate(block) {
     if (paragraphs.length) return paragraphs.map((p) => p.textContent?.trim());
     return cell.textContent?.trim();
   };
-  const rowLabel = (n) => block.querySelector(`:scope > div:nth-child(${n})`)?.children?.[0]?.textContent?.trim()?.toLowerCase();
-  const firstRowIsContentFragment = rowLabel(1)?.includes('content fragment');
-  const offset = firstRowIsContentFragment ? 1 : 0;
-  const buttonText = rowValue(offset + 1);
-  const buttonStyle = rowValue(offset + 2) || 'default';
-  const buttonLinkValue = rowValue(offset + 3);
-  const buttonEventType = rowValue(offset + 6);
-  const buttonWebhookUrl = rowValue(offset + 7);
-  const buttonFormId = rowValue(offset + 8);
-  const buttonData = rowValue(offset + 9);
-  const buttonCustomStyles = rowValue(offset + 10);
-  const linkRow = block.querySelector(`:scope > div:nth-child(${offset + 3})`);
+  const contentFragmentPath = rowValue(1);
+  if (contentFragmentPath) {
+    block.dataset.contentFragmentPath = contentFragmentPath;
+  }
+  const buttonText = rowValue(2);
+  const buttonStyle = rowValue(3) || 'default';
+  const buttonLinkValue = rowValue(4);
+  const buttonEventType = rowValue(7);
+  const buttonWebhookUrl = rowValue(8);
+  const buttonFormId = rowValue(9);
+  const buttonData = rowValue(10);
+  const buttonCustomStyles = rowValue(11);
+  const linkRow = block.querySelector(':scope > div:nth-child(4)');
   const ctaLink = linkRow?.querySelector('a.cta, a') || block.querySelector('a.cta, a');
   const buttonConfig = createButtonFromConfig({
     text: buttonText ?? ctaLink?.textContent?.trim(),
@@ -229,7 +233,7 @@ export default async function decorate(block) {
   block.classList.add('product-card-block');
   block.innerHTML = '';
 
-  const product = await fetchProductData();
+  const product = await fetchProductData(contentFragmentPath);
 
   const wrapper = document.createElement('div');
   wrapper.className = 'cards product-card-block';
