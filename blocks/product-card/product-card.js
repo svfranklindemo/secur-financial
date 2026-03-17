@@ -90,7 +90,7 @@ function normalizeContentFragmentPath(rawPath) {
 
 async function fetchProductData(contentFragmentPath) {
   const isAuthor = isAuthorEnvironment();
-  const pathParam = contentFragmentPath ? `path=${encodeURIComponent(contentFragmentPath)}` : '';
+  const pathParam = contentFragmentPath ? `path=${contentFragmentPath}` : '';
   const authorPathParam = pathParam ? `;${pathParam}` : '';
   const publishPathParam = pathParam ? `&${pathParam}` : '';
   const requestUrl = isAuthor
