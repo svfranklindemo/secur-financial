@@ -1,12 +1,17 @@
 import { readBlockConfig } from '../../scripts/aem.js';
 
 function getSubmitLink(block, config) {
-  const fromConfig = config['submit-link'] ?? config.redirectUrl ?? config.submitLink ?? '';
-  if (fromConfig) return fromConfig.trim();
-  const propEl = block.querySelector('[data-aue-prop="submitLink"]');
+  // readBlockConfig uses toClassName(label) so "Submit button link" -> "submit-button-link"
+  const fromConfig = (config['submit-button-link'] ?? config['submit-link'] ?? config.redirectUrl ?? config.submitLink ?? '').toString().trim();
+  if (fromConfig) return fromConfig;
+  // UE may use data-aue-prop="submitLink" or "submit-link"
+  const propEl = block.querySelector('[data-aue-prop="submitLink"]') || block.querySelector('[data-aue-prop="submit-link"]');
   if (propEl) {
     const a = propEl.querySelector('a[href]');
-    return (a?.getAttribute('href') || propEl.textContent || '').trim();
+    const href = a?.getAttribute('href')?.trim();
+    if (href) return href;
+    const text = (propEl.textContent || propEl.innerText || '').trim();
+    if (text) return text;
   }
   return '';
 }
