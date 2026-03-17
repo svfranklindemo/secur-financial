@@ -1,4 +1,4 @@
-import { createOptimizedPicture, readBlockConfig } from '../../scripts/aem.js';
+import { createOptimizedPicture } from '../../scripts/aem.js';
 import { isAuthorEnvironment } from '../../scripts/scripts.js';
 
 const FALLBACK_PRODUCT = {
@@ -187,21 +187,47 @@ function createButtonFromConfig(config) {
 }
 
 export default async function decorate(block) {
-  const config = readBlockConfig(block) || {};
-  const contentFragmentPath =
-    config['content-fragment-folder'] || config.contentfragmentfolder || config.contentFragmentFolder || '';
+  const rowValue = (n) => {
+    const row = block.querySelector(`:scope > div:nth-child(${n})`);
+    if (!row?.children?.length) return undefined;
+    const cell = row.children[1] ?? row.children[0];
+    if (!cell) return undefined;
+    const anchors = [...cell.querySelectorAll('a')];
+    if (anchors.length === 1) {
+      return anchors[0].href || anchors[0].textContent?.trim();
+    }
+    if (anchors.length > 1) {
+      return anchors.map((anchor) => anchor.href || anchor.textContent?.trim());
+    }
+    const paragraphs = [...cell.querySelectorAll('p')];
+    if (paragraphs.length === 1) return paragraphs[0].textContent?.trim();
+    if (paragraphs.length) return paragraphs.map((p) => p.textContent?.trim());
+    return cell.textContent?.trim();
+  };
+  const contentFragmentPath = rowValue(1);
   if (contentFragmentPath) {
     block.dataset.contentFragmentPath = contentFragmentPath;
   }
+  const buttonText = rowValue(2);
+  const buttonStyle = rowValue(3) || 'default';
+  const buttonLinkValue = rowValue(4);
+  const buttonEventType = rowValue(7);
+  const buttonWebhookUrl = rowValue(8);
+  const buttonFormId = rowValue(9);
+  const buttonData = rowValue(10);
+  const buttonCustomStyles = rowValue(11);
+  const linkRow = block.querySelector(':scope > div:nth-child(4)');
+  const ctaLink = linkRow?.querySelector('a.cta, a') || block.querySelector('a.cta, a');
   const buttonConfig = createButtonFromConfig({
-    text: config.text,
-    link: config.link,
-    eventType: config.buttoneventtype,
-    webhook: config.buttonwebhookurl,
-    formId: config.buttonformid,
-    buttonData: config.buttondata,
-    style: config.ctastyle ?? 'default',
-    customStyles: config.customstyles ?? config.customStyles,
+    text: buttonText ?? ctaLink?.textContent?.trim(),
+    link: buttonLinkValue ?? ctaLink?.href,
+    eventType: buttonEventType ?? ctaLink?.dataset?.buttonEventType,
+    webhook: buttonWebhookUrl ?? ctaLink?.dataset?.buttonWebhookUrl,
+    formId: buttonFormId ?? ctaLink?.dataset?.buttonFormId,
+    buttonData: buttonData ?? ctaLink?.dataset?.buttonData,
+    style: buttonStyle,
+    customStyles: buttonCustomStyles,
+    customAttributes: ctaLink ? { ...ctaLink.dataset } : null,
   });
   [...block.children].forEach((row) => row.remove());
   block.classList.add('product-card-block');
