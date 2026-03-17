@@ -1080,6 +1080,38 @@
     ]
   },
   {
+    "id": "transfer-funds",
+    "fields": [
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "submitLink",
+        "label": "Submit button link",
+        "description": "URL to redirect to after form submit (e.g. thank-you page)",
+        "multi": false,
+        "validation": {
+          "rootPath": "/content"
+        }
+      }
+    ]
+  },
+  {
+    "id": "set-up-auto-save",
+    "fields": [
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "submitLink",
+        "label": "Submit button link",
+        "description": "URL to redirect to after form submit (e.g. thank-you page)",
+        "multi": false,
+        "validation": {
+          "rootPath": "/content"
+        }
+      }
+    ]
+  },
+  {
     "id": "contentfragment",
     "fields": [
       {
