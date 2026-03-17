@@ -1324,21 +1324,29 @@ table {
   filter: brightness(1.1);
 }
 
-/* .section.home-getoffer-container: 2 columns – left: Mortgage card + Get offer (stacked, dark); right: Credit + Savings cards (stacked) */
+/* .section.home-getoffer-container: 2 columns – left: Mortgage + Get offer (one dark block); right: Credit + Savings cards. Tighter gaps, no borders. */
 main .section.home-getoffer-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: auto;
-  gap: 24px;
+  gap: 16px;
   align-items: stretch;
 }
+/* Left column – first item (Mortgage card): dark background, no border/shadow */
 main .section.home-getoffer-container > .cards-wrapper:nth-child(1) {
   grid-column: 1;
   grid-row: 1;
   background-color: #1a232f;
   color: #fff;
-  padding: 24px;
+  padding: 20px;
   box-sizing: border-box;
+  border: none;
+  box-shadow: none;
+}
+main .section.home-getoffer-container > .cards-wrapper:nth-child(1) .cards > ul > li {
+  border: none;
+  box-shadow: none;
+  background: transparent;
 }
 main .section.home-getoffer-container > .cards-wrapper:nth-child(1) .cards-card-body,
 main .section.home-getoffer-container > .cards-wrapper:nth-child(1) .cards-card-body h2,
@@ -1346,13 +1354,27 @@ main .section.home-getoffer-container > .cards-wrapper:nth-child(1) .cards-card-
 main .section.home-getoffer-container > .cards-wrapper:nth-child(1) .cards-card-body a {
   color: #fff;
 }
+/* Left column – Get offer form: same dark block, no border */
 main .section.home-getoffer-container > .get-offer-wrapper {
   grid-column: 1;
   grid-row: 2;
   background-color: #1a232f;
   color: #fff;
-  padding: 24px;
+  padding: 20px;
   box-sizing: border-box;
+  border: none;
+  box-shadow: none;
+}
+/* Right column cards: no border, no box-shadow */
+main .section.home-getoffer-container > .cards-wrapper:nth-child(3),
+main .section.home-getoffer-container > .cards-wrapper:nth-child(4) {
+  border: none;
+  box-shadow: none;
+}
+main .section.home-getoffer-container > .cards-wrapper:nth-child(3) .cards > ul > li,
+main .section.home-getoffer-container > .cards-wrapper:nth-child(4) .cards > ul > li {
+  border: none;
+  box-shadow: none;
 }
 main .section.home-getoffer-container > .cards-wrapper:nth-child(3) {
   grid-column: 2;
