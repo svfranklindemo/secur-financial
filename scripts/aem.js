@@ -890,8 +890,10 @@ function decorateBlock(block) {
  * @param {Element} main The container element
  */
 function decorateBlocks(main) {
-  /* Section-level blocks and blocks inside columns (so action-button etc. load and style in columns) */
-  main.querySelectorAll('div.section > div > div, .columns-row > div > div').forEach(decorateBlock);
+  /* Section-level blocks and blocks inside columns (so action-button etc. load and style in columns).
+   * Use both .columns > div > div > div (before columns block is decorated) and .columns-row > div > div
+   * (after columns adds .columns-row) so column blocks are found regardless of load order. */
+  main.querySelectorAll('div.section > div > div, .columns > div > div > div, .columns-row > div > div').forEach(decorateBlock);
 }
 
 /**
