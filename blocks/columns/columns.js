@@ -48,6 +48,41 @@ function getVideoElement(source, autoplay, background) {
   return video;
 }
 
+/** Button style values from action-button model (live output can be plain p tags) */
+const ACTION_BUTTON_STYLES = ['default-button', 'default-button-secondary', 'default-button-link', 'default-button-dark'];
+
+/**
+ * On live, action buttons in columns can be delivered as consecutive <p> (label, title, style)
+ * instead of a wrapped div.action-button. Wrap each such group so they can be decorated and loaded.
+ * @param {Element} col Column element
+ * @returns {Element[]} Newly created action-button block elements
+ */
+function normalizeLiveActionButtonsInColumn(col) {
+  const created = [];
+  const children = [...col.children];
+  let i = 0;
+  while (i <= children.length - 3) {
+    const a = children[i];
+    const b = children[i + 1];
+    const c = children[i + 2];
+    const styleText = (c.textContent || '').trim();
+    if (a.tagName === 'P' && b.tagName === 'P' && c.tagName === 'P' && ACTION_BUTTON_STYLES.includes(styleText)) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'action-button';
+      a.setAttribute('data-aue-prop', 'label');
+      b.setAttribute('data-aue-prop', 'title');
+      c.setAttribute('data-aue-prop', 'style');
+      wrapper.append(a, b, c);
+      col.insertBefore(wrapper, a);
+      created.push(wrapper);
+      i += 3;
+    } else {
+      i += 1;
+    }
+  }
+  return created;
+}
+
 const loadVideoEmbed = (block, link, autoplay, background) => {
   const isYoutube = link.includes('youtube') || link.includes('youtu.be');
   if (isYoutube) {
@@ -383,21 +418,27 @@ function applyColumnWidths(block, rawValue) {
   });
 }
 
-export default function decorate(block) {
+export default async function decorate(block) {
   // Prevent re-decoration
   if (block.dataset.decorated === 'true') {
     return;
   }
-  
+
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 
   const columnWidths = parseColumnWidths(block);
 
+  /** Action-button blocks created from live "p,p,p" pattern; decorate and load after column loop */
+  const actionButtonBlocksToLoad = [];
+
   // setup image columns
   [...block.children].forEach((row) => {
     row.classList.add('columns-row');
     [...row.children].forEach((col, colIndex) => {
+      // Normalize live action-button content (consecutive p label/title/style) so it can be decorated
+      actionButtonBlocksToLoad.push(...normalizeLiveActionButtonsInColumn(col));
+
       if (columnWidths && columnWidths[colIndex] != null) {
         const pct = columnWidths[colIndex];
         col.style.flex = `0 0 ${pct}%`;
@@ -405,7 +446,7 @@ export default function decorate(block) {
       }
       // Process alignment for this column
       processColumnAlignment(col);
-      
+
       const pic = col.querySelector('picture');
       if (pic) {
         const picWrapper = pic.closest('div');
@@ -452,10 +493,19 @@ export default function decorate(block) {
       }
     });
   });
-  
+
+  // Decorate and load action-button blocks created from live p-tag pattern (author already has div.action-button)
+  if (actionButtonBlocksToLoad.length > 0) {
+    const { decorateBlock, loadBlock } = await import('../../scripts/aem.js');
+    for (const actionButtonBlock of actionButtonBlocksToLoad) {
+      decorateBlock(actionButtonBlock);
+      await loadBlock(actionButtonBlock);
+    }
+  }
+
   // Mark block as decorated
   block.dataset.decorated = 'true';
-  
+
   // Listen for UE events to process new columns when they're added
   if (!block._ueListenerAdded) {
     // When user changes Item Alignment in the properties panel, UE sends aue:content-patch;
