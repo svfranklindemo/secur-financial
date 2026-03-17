@@ -83,7 +83,7 @@ function normalizeContentFragmentPath(rawPath) {
   } catch (error) {
     // ignore invalid URLs, treat value as relative path
   }
-  const match = path.match(/(content\/dam\/.+?)(?:\.html)?(?:$|\?)/);
+  const match = path.match(/(\/?content\/dam\/.+?)(?:\.html)?(?:$|\?)/);
   if (match) path = match[1];
   return path;
 }
