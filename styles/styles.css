@@ -1324,28 +1324,28 @@ table {
   filter: brightness(1.1);
 }
 
-/* .section.home-getoffer-container: left = Mortgage + Get offer (same height as right); right = Credit + Savings cards side-by-side with small gap. */
+/* .section.home-getoffer-container: 2 columns – left: Mortgage + Get offer (one dark block); right: Credit + Savings cards. Equal row heights so right column = left height, each right card = half. */
 main .section.home-getoffer-container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 0 12px;
+  gap: 0;
   align-items: stretch;
   margin: 0;
   padding: 0;
+  min-height: 400px; /* so 1fr 1fr can split space; grid grows with left column content */
 }
 main .section.home-getoffer-container > div {
   max-width: none;
   margin: 0;
   padding: 0;
 }
-/* Left column – first item (Mortgage card): dark background, row 1 */
+/* Left column – first item (Mortgage card): dark background, no border/shadow */
 main .section.home-getoffer-container > div:nth-child(1) {
   grid-column: 1;
   grid-row: 1;
   background-color: #1a232f;
   color: #fff;
-  padding: 24px;
   box-sizing: border-box;
   border: none;
   box-shadow: none;
@@ -1363,7 +1363,7 @@ main .section.home-getoffer-container > div:nth-child(1) .cards-card-body a {
   color: #fff;
   background-color: #1a232f;
 }
-/* Left column – Get offer form: row 2, same height as right column */
+/* Left column – Get offer form: same dark block, flush with card above, no border/radius, full width */
 main .section.home-getoffer-container > div:nth-child(2) {
   grid-column: 1;
   grid-row: 2;
@@ -1376,41 +1376,54 @@ main .section.home-getoffer-container > div:nth-child(2) {
   box-shadow: none;
   border-radius: 0;
 }
-main .section.home-getoffer-container > div:nth-child(2) .get-offer-wrapper {
+main .section.home-getoffer-container > div:nth-child(2) .get-offer-wrapper,main .section.home-getoffer-container > div {
   max-width: none;
   width: 100%;
   align-items: stretch;
-  padding-top: 0;
-  padding-bottom: 0;
-  gap: 0.75rem;
 }
 main .section.home-getoffer-container > div:nth-child(2) .get-offer-input {
   max-width: none;
   width: 100%;
-  margin: 0;
 }
 main .section.home-getoffer-container > div:nth-child(2) .get-offer-button {
   width: auto;
   align-self: center;
-  margin: 0;
 }
-/* Right column – two cards side-by-side (half of half), each full height, small gap between */
+/* Right column cards: no border, no box-shadow; each fills half the column height; small gap between them */
 main .section.home-getoffer-container > div:nth-child(3),
 main .section.home-getoffer-container > div:nth-child(4) {
   border: none;
   box-shadow: none;
   border-radius: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+main .section.home-getoffer-container > div:nth-child(3) .cards,
+main .section.home-getoffer-container > div:nth-child(4) .cards {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+main .section.home-getoffer-container > div:nth-child(3) .cards > ul,
+main .section.home-getoffer-container > div:nth-child(4) .cards > ul {
+  flex: 1;
+  min-height: 0;
 }
 main .section.home-getoffer-container > div:nth-child(3) .cards > ul > li,
 main .section.home-getoffer-container > div:nth-child(4) .cards > ul > li {
   border: none;
   box-shadow: none;
+  height: 100%;
+  min-height: 0;
 }
 main .section.home-getoffer-container > div:nth-child(3) {
   grid-column: 2;
-  grid-row: 1 / 3;
+  grid-row: 1;
+  margin-bottom: 12px;
 }
 main .section.home-getoffer-container > div:nth-child(4) {
-  grid-column: 3;
-  grid-row: 1 / 3;
+  grid-column: 2;
+  grid-row: 2;
 }
