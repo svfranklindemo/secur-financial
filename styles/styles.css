@@ -1482,3 +1482,7 @@ main .section.home-getoffer-container > div:nth-child(4) {
   grid-column: 2;
   grid-row: 2;
 }
+
+.custom-text-class div {
+  color: #fff !important;
+}
