@@ -196,7 +196,9 @@ function setupStepIndicator(block) {
   if (submitWrapper) btnWrapper.appendChild(submitWrapper);
 
   const form = block.querySelector('form');
-  attachNewAccountWizardDataLayerTracking(wizard, form);
+  if(window.dataLayer && typeof window.updateDataLayer === 'function') {
+    attachNewAccountWizardDataLayerTracking(wizard, form);
+  }
 }
 
 const NEW_ACCOUNT_WIZARD_NAME = 'New Account Application';

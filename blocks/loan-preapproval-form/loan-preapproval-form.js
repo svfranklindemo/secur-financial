@@ -221,7 +221,9 @@ function setupLoanPreapprovalStepIndicator(block) {
   if (submitWrapper) btnWrapper.appendChild(submitWrapper);
 
   const form = block.querySelector('form');
-  attachLoanPreapprovalFormStepEvents(wizard, form);
+  if (window.dataLayer && typeof window.updateDataLayer === 'function') {
+    attachLoanPreapprovalFormStepEvents(wizard, form);
+  }
 }
 
 function getLoanPreapprovalWizardStepIndex(wizard) {
