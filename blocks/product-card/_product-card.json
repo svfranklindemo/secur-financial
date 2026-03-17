@@ -31,11 +31,16 @@
           }
         },
         {
-          "component": "richtext",
-          "name": "text",
-          "value": "",
-          "label": "Text",
+          "component": "text",
+          "name": "buttonText",
+          "label": "Button Text",
           "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "name": "link",
+          "label": "Button Link",
+          "description": "Button link for entire card"
         },
         {
           "component": "select",
@@ -57,19 +62,6 @@
               "value": "button-dark"
             }
           ]
-        },
-        {
-          "component": "aem-content",
-          "name": "link",
-          "label": "Section Link",
-          "description": "Optional link for entire card"
-        },
-        {
-          "component": "boolean",
-          "name": "selectable",
-          "label": "Selectable",
-          "value": "false",
-          "valueType": "boolean"
         },
         {
           "component": "select",
