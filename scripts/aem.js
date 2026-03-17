@@ -890,7 +890,8 @@ function decorateBlock(block) {
  * @param {Element} main The container element
  */
 function decorateBlocks(main) {
-  main.querySelectorAll('div.section > div > div').forEach(decorateBlock);
+  /* Section-level blocks and blocks inside columns (so action-button etc. load and style in columns) */
+  main.querySelectorAll('div.section > div > div, .columns-row > div > div').forEach(decorateBlock);
 }
 
 /**

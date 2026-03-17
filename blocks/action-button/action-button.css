@@ -143,10 +143,12 @@
 }
 
 /*
- * Hide button model config fields in the action-button block (EDS/authoring fallback).
- * Same config hiding is applied in JS (display:none on rows index >= 4) like hero/cards.
- * These rules ensure config is hidden before JS runs or when block is viewed in EDS.
+ * Hide all AUE metadata in action-button so title/style/label never show as text (author + live).
+ * JS replaces block content with the button only; these rules hide props before JS or in EDS.
  */
+.action-button [data-aue-prop="title"],
+.action-button [data-aue-prop="style"],
+.action-button [data-aue-prop="label"],
 .action-button [data-aue-prop="eventType"],
 .action-button [data-aue-prop="webhookUrl"],
 .action-button [data-aue-prop="formId"],
@@ -164,6 +166,9 @@
   display: none !important;
 }
 
+.action-button div:has(> [data-aue-prop="title"]),
+.action-button div:has(> [data-aue-prop="style"]),
+.action-button div:has(> [data-aue-prop="label"]),
 .action-button div:has(> [data-aue-prop="eventType"]),
 .action-button div:has(> [data-aue-prop="webhookUrl"]),
 .action-button div:has(> [data-aue-prop="formId"]),

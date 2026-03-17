@@ -1,27 +1,30 @@
 import { div, a, span } from '../../scripts/dom-helpers.js';
 
+function getTextFromSelector(block, selector) {
+  const el = block.querySelector(selector);
+  if (!el) return '';
+  const text = (el.textContent || '').trim();
+  return text;
+}
+
 export default function decorate(block) {
-  const children = [...block.children];
-  
-  const linkDiv = children[0];
-  const linkElement = linkDiv?.querySelector('a');
-  const buttonLink = linkElement?.href || '#';
-  
-  const labelDiv = children[1];
-  const labelElement = labelDiv?.querySelector('p');
-  const buttonLabel = labelElement?.textContent?.trim() || 'Button';
-  
-  const titleDiv = children[2];
-  const titleElement = titleDiv?.querySelector('p');
-  const buttonTitle = titleElement?.textContent?.trim() || '';
-  
-  const styleDiv = children[3];
-  const styleElement = styleDiv?.querySelector('p');
-  const buttonStyle = styleElement?.textContent?.trim() || 'default-button';
-  
+  /* Read from AUE props first (author/live), then fallback to index-based for sheet content */
+  const linkEl = block.querySelector('a[href]');
+  const buttonLink = linkEl?.getAttribute('href')?.trim() || '#';
+
+  const buttonLabel = getTextFromSelector(block, '[data-aue-prop="label"]')
+    || getTextFromSelector(block, '[data-aue-prop="title"]')
+    || getTextFromSelector(block, 'p')
+    || 'Button';
+
+  const buttonTitle = getTextFromSelector(block, '[data-aue-prop="title"]') || '';
+
+  const buttonStyle = (getTextFromSelector(block, '[data-aue-prop="style"]') || 'default-button').trim()
+    || 'default-button';
+
   const buttonElement = div({ class: `button-container ${buttonStyle}` },
-    a({ 
-      href: buttonLink, 
+    a({
+      href: buttonLink,
       class: 'button',
       title: buttonTitle || buttonLabel
     },
@@ -29,12 +32,6 @@ export default function decorate(block) {
     )
   );
 
-  /* Hide config rows (index >= 4) on published/live, same as hero (index >= 7) and cards (.cards-config) */
-  [...block.children].forEach((row, index) => {
-    if (index >= 4) row.style.display = 'none';
-  });
-
-  /* Replace first 4 rows with the rendered button */
-  for (let i = 0; i < 4 && block.firstChild; i++) block.removeChild(block.firstChild);
-  block.insertBefore(buttonElement, block.firstChild);
+  /* Replace all block content with the single button so AUE metadata never shows (author + live) */
+  block.replaceChildren(buttonElement);
 }
