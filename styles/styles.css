@@ -1332,7 +1332,6 @@ main .section.home-getoffer-container {
   gap: 0;
   align-items: stretch;
   margin: 0;
-  max-width: none;
   padding: 0;
 }
 main .section.home-getoffer-container > div {
@@ -1346,7 +1345,6 @@ main .section.home-getoffer-container > div:nth-child(1) {
   grid-row: 1;
   background-color: #1a232f;
   color: #fff;
-  padding: 24px;
   box-sizing: border-box;
   border: none;
   box-shadow: none;
@@ -1362,6 +1360,7 @@ main .section.home-getoffer-container > div:nth-child(1) .cards-card-body h2,
 main .section.home-getoffer-container > div:nth-child(1) .cards-card-body p,
 main .section.home-getoffer-container > div:nth-child(1) .cards-card-body a {
   color: #fff;
+  background-color: #1a232f;
 }
 /* Left column – Get offer form: same dark block, flush with card above, no border/radius, full width */
 main .section.home-getoffer-container > div:nth-child(2) {
@@ -1376,7 +1375,7 @@ main .section.home-getoffer-container > div:nth-child(2) {
   box-shadow: none;
   border-radius: 0;
 }
-main .section.home-getoffer-container > div:nth-child(2) .get-offer-wrapper {
+main .section.home-getoffer-container > div:nth-child(2) .get-offer-wrapper,main .section.home-getoffer-container > div {
   max-width: none;
   width: 100%;
   align-items: stretch;
