@@ -10,9 +10,9 @@ const FALLBACK_PRODUCT = {
   image: 'https://main--demo-boilerplate--lamontacrook.hlx.page/en/media_1f909a9ffb576222b96b4fdf875def856037efc95.png',
 };
 
-const AUTHOR_PRODUCT_ENDPOINT = 'https://author-p159983-e1710854.adobeaemcloud.com/graphql/execute.json/secur-financial/product-card-information';
+const AUTHOR_PRODUCT_ENDPOINT = 'https://author-p121371-e1189853.adobeaemcloud.com/graphql/execute.json/secur-financial/product-card-information';
 const PUBLISH_PRODUCT_ENDPOINT = 'https://275323-918sangriatortoise.adobeioruntime.net/api/v1/web/dx-excshell-1/secure-financial-product-card-information';
-const PUBLISH_ENVIRONMENT = 'p159983-e1710854';
+const PUBLISH_ENVIRONMENT = 'p121371-e1189853';
 
 function resolvePath(obj, path) {
   if (!obj || !path) return undefined;
