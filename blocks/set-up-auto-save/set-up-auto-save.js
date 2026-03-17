@@ -1,8 +1,25 @@
+import { readBlockConfig } from '../../scripts/aem.js';
+
+function getSubmitLink(block, config) {
+  const fromConfig = config['submit-link'] ?? config.redirectUrl ?? config.submitLink ?? '';
+  if (fromConfig) return fromConfig.trim();
+  const propEl = block.querySelector('[data-aue-prop="submitLink"]');
+  if (propEl) {
+    const a = propEl.querySelector('a[href]');
+    return (a?.getAttribute('href') || propEl.textContent || '').trim();
+  }
+  return '';
+}
+
 export default async function decorate(block) {
+  const config = readBlockConfig(block) || {};
+  const submitLink = getSubmitLink(block, config);
+
   const formDef = {
     id: "set-up-auto-save",
     fieldType: "form",
     appliedCssClassNames: "set-up-auto-save-form",
+    ...(submitLink && { redirectUrl: submitLink }),
     items: [
       {
         id: "heading-set-up-auto-save",
@@ -21,6 +38,7 @@ export default async function decorate(block) {
             fieldType: "drop-down",
             label: { value: "Transfer from" },
             enum: ["Checking Account"],
+            value: "Checking Account",
             properties: { colspan: 12 },
           },
           {
@@ -29,6 +47,7 @@ export default async function decorate(block) {
             fieldType: "drop-down",
             label: { value: "Transfer to" },
             enum: ["Retirement Account"],
+            value: "Retirement Account",
             properties: { colspan: 12 },
           },
           {

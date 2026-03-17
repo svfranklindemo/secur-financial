@@ -19,7 +19,15 @@
   "models": [
     {
       "id": "set-up-auto-save",
-      "fields": []
+      "fields": [
+        {
+          "component": "aem-content",
+          "valueType": "string",
+          "name": "submitLink",
+          "label": "Submit button link",
+          "description": "URL to redirect to after form submit (e.g. thank-you page)"
+        }
+      ]
     }
   ],
   "filters": [
