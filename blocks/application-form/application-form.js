@@ -238,7 +238,9 @@ function setupApplicationFormStepIndicator(block) {
   const submitWrapper = wizard.querySelector('.submit-wrapper');
   if (submitWrapper) btnWrapper.appendChild(submitWrapper);
   const form = block.querySelector('form');
-  attachApplicationFormStepEvents(wizard, form);
+  if (window.dataLayer && typeof window.updateDataLayer === 'function') {
+    attachApplicationFormStepEvents(wizard, form);
+  }
 }
 
 function getApplicationFormWizardStepIndex(wizard) {
