@@ -364,11 +364,30 @@ body.securfinancial-theme {
 }
 
 body.securbank-theme header .nav-wrapper,
-body.securbank-theme footer,
-body.securfinancial-theme header .nav-wrapper,
-body.securfinancial-theme footer {
+body.securfinancial-theme header .nav-wrapper {
   background-color: var(--main-accent-color);
   color: var(--text-light);
+}
+
+/* SecurFinancial theme: footer white with black text and links */
+body.securbank-theme footer,
+body.securfinancial-theme footer {
+  background-color: #fff;
+  color: #000;
+}
+
+body.securbank-theme footer .footer,
+body.securfinancial-theme footer .footer,
+body.securbank-theme footer .footer p,
+body.securfinancial-theme footer .footer p,
+body.securbank-theme footer .footer a,
+body.securfinancial-theme footer .footer a {
+  color: #000;
+}
+
+body.securbank-theme footer .footer a:hover,
+body.securfinancial-theme footer .footer a:hover {
+  color: var(--main-accent-color);
 }
 
 body.securbank-theme header .nav-wrapper nav .nav-sections ul > li > a::before,
