@@ -85,7 +85,6 @@ function normalizeContentFragmentPath(rawPath) {
   }
   const match = path.match(/(content\/dam\/.+?)(?:\.html)?(?:$|\?)/);
   if (match) path = match[1];
-  path = path.replace(/^\//, '');
   return path;
 }
 
