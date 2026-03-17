@@ -108,14 +108,12 @@ async function fetchProductData(contentFragmentPath) {
     const rawProduct = pickProductFromResponse(payload);
     if (!rawProduct) return FALLBACK_PRODUCT;
     return {
-      id: rawProduct?.productSku || rawProduct?.id || rawProduct?.sku || FALLBACK_PRODUCT.id,
-      name: rawProduct?.productName || rawProduct?.name || rawProduct?.title || FALLBACK_PRODUCT.name,
-      category: rawProduct?.productCategory || rawProduct?.category || FALLBACK_PRODUCT.category,
-      description:
-        rawProduct?.productDescription?.markdown || rawProduct?.description || FALLBACK_PRODUCT.description,
-      sku: rawProduct?.productSku || rawProduct?.sku || rawProduct?.id || FALLBACK_PRODUCT.sku,
-      image:
-        normalizeImageUrl(rawProduct?.productImage)
+      id: rawProduct?.productSku,
+      name: rawProduct?.productName,
+      category: rawProduct?.productCategory,
+      description: rawProduct?.productDescription?.html,
+      sku: rawProduct?.productSku || rawProduct?.id,
+      image: normalizeImageUrl(rawProduct?.productImage)
     };
   } catch (error) {
     /* eslint-disable-next-line no-console */
