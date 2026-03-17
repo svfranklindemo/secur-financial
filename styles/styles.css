@@ -372,6 +372,12 @@ body.securfinancial-theme button {
   border-radius: 30px;
 }
 
+body.securbank-theme h1,
+body.securfinancial-theme h1 {
+  font-size: 39px;
+  line-height: 1.5;
+}
+
 body.securbank-theme h2,
 body.securfinancial-theme h2 {
   font-size: 36px;
@@ -1492,9 +1498,16 @@ main .section.home-getoffer-container > div:nth-child(3) {
   grid-row: 1;
   margin-bottom: 12px;
 }
+
+main .section.home-getoffer-container .cards > ul {
+  padding-top: 0;
+}
 main .section.home-getoffer-container > div:nth-child(4) {
   grid-column: 2;
   grid-row: 2;
+}
+main .section.home-getoffer-container > div:nth-child(1) .cards > ul > li img {
+  width: 65%;
 }
 
 .custom-text-class div {
