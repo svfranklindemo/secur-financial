@@ -51,13 +51,31 @@ function getVideoElement(source, autoplay, background) {
 /** Button style values from action-button model (live output can be plain p tags) */
 const ACTION_BUTTON_STYLES = ['default-button', 'default-button-secondary', 'default-button-link', 'default-button-dark'];
 
+/** True if el is a placeholder button output from publish (shows # and duplicates real button built from p tags) */
+function isPlaceholderButtonContainer(el) {
+  if (el.tagName !== 'P' || !el.classList.contains('button-container')) return false;
+  const a = el.querySelector('a.button');
+  if (!a) return false;
+  const href = (a.getAttribute('href') || '').trim();
+  const title = (a.getAttribute('title') || '').trim();
+  const text = (a.textContent || '').trim();
+  return (href === '#' || href === '') && (title === '#' || title === '') && (text === '#' || text === '');
+}
+
 /**
- * On live, action buttons in columns can be delivered as consecutive <p> (label, title, style)
- * instead of a wrapped div.action-button. Wrap each such group so they can be decorated and loaded.
+ * On live, action buttons in columns can be delivered as:
+ * - Consecutive <p> (label, title, style) only, or
+ * - A mix of <p class="button-container"> (placeholder #) and consecutive <p> (label, title, style).
+ * Remove placeholder button-container p tags, then wrap each 3-p group in div.action-button so they can be decorated and loaded.
  * @param {Element} col Column element
  * @returns {Element[]} Newly created action-button block elements
  */
 function normalizeLiveActionButtonsInColumn(col) {
+  // Remove broken placeholder buttons from publish so we don't show "#" or duplicate the real button
+  [...col.children].forEach((child) => {
+    if (isPlaceholderButtonContainer(child)) child.remove();
+  });
+
   const created = [];
   const children = [...col.children];
   let i = 0;
