@@ -214,6 +214,12 @@ function redirectAfterPreapprovalSubmit() {
   }, 2000);
 }
 
+function clearProductObject() {
+  if (typeof window.updateDataLayer === 'function') {
+    window.updateDataLayer({ product: {} }, false);
+  }
+}
+
 function attachLoanPreapprovalFormSubmitHandler(block) {
   const form = block.querySelector('form');
   if (!form) return;
@@ -227,6 +233,7 @@ function attachLoanPreapprovalFormSubmitHandler(block) {
     // eslint-disable-next-line no-console
     console.log('Loan preapproval form data:', data);
 
+    clearProductObject();
     dispatchCustomEvent('home-loan-application-submit');
     redirectAfterPreapprovalSubmit();
   });

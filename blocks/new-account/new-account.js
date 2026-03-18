@@ -153,6 +153,12 @@ function redirectAfterSubmit() {
   }, 2000);
 }
 
+function clearProductObject() {
+  if (typeof window.updateDataLayer === 'function') {
+    window.updateDataLayer({ product: {} }, false);
+  }
+}
+
 function attachSubmitHandler(block) {
   const form = block.querySelector('form');
   if (!form) return;
@@ -163,6 +169,7 @@ function attachSubmitHandler(block) {
     const data = collectFormData(form);
     // eslint-disable-next-line no-console
     console.log('New account form data:', data);
+    clearProductObject();
     dispatchCustomEvent('form-submit');
     redirectAfterSubmit();
   });

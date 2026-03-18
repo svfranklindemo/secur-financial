@@ -32,7 +32,17 @@ function firePageViewWhenReady() {
     document.addEventListener("dataLayerUpdated", () => firePageViewWhenReady(), { once: true });
     return;
   }
+  clearProductUnlessProductIdInUrl();
   dispatchCustomEvent("page-view");
+}
+
+function clearProductUnlessProductIdInUrl() {
+  if (typeof window === 'undefined' || typeof window.location === 'undefined') return;
+  const params = new URLSearchParams(window.location.search || '');
+  if (params.has('productId')) return;
+  if (typeof window.updateDataLayer === 'function') {
+    window.updateDataLayer({ product: {} }, false);
+  }
 }
 
 export async function initializeCustomEvents() {
