@@ -249,7 +249,7 @@ export default async function decorate(block) {
   if (contentFragmentPath) {
     block.dataset.contentFragmentPath = contentFragmentPath;
   }
-  const layout = ['side-by-side', 'stacked'].includes((config.layout || '').toLowerCase())
+  const layout = ['side-by-side', 'stacked', 'compact-stacked-card'].includes((config.layout || '').toLowerCase())
     ? config.layout.toLowerCase()
     : 'stacked';
   const buttonConfig = createButtonFromConfig({

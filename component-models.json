@@ -774,6 +774,10 @@
             "value": "stacked"
           },
           {
+            "name": "Compact Stacked Card",
+            "value": "compact-stacked-card"
+          },
+          {
             "name": "Side by Side",
             "value": "side-by-side"
           }
