@@ -51,7 +51,7 @@ function buildLoanPreapprovalFormDef() {
             items: [
               { id: 'firstName', name: 'firstName', fieldType: 'text-input', label: { value: 'First name' }, properties: { colspan: 6 } },
               { id: 'lastName', name: 'lastName', fieldType: 'text-input', label: { value: 'Last name' }, properties: { colspan: 6 } },
-              { id: 'email', name: 'email', fieldType: 'email', label: { value: 'Email address' }, properties: { colspan: 12 } },
+              { id: 'email', name: 'email', fieldType: 'text-input', label: { value: 'Email address' }, properties: { colspan: 12 } },
               { id: 'phone', name: 'phone', fieldType: 'text-input', label: { value: 'Phone number' }, properties: { colspan: 12 } },
               {
                 id: 'phone-consent',
