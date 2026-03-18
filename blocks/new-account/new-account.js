@@ -146,6 +146,13 @@ function formatDateOfBirthInput(form) {
   });
 }
 
+const REDIRECT_PATH_AFTER_SUBMIT = '/en/submitted-successfully';
+function redirectAfterSubmit() {
+  setTimeout(() => {
+    window.location.href = REDIRECT_PATH_AFTER_SUBMIT;
+  }, 2000);
+}
+
 function attachSubmitHandler(block) {
   const form = block.querySelector('form');
   if (!form) return;
@@ -157,17 +164,7 @@ function attachSubmitHandler(block) {
     // eslint-disable-next-line no-console
     console.log('New account form data:', data);
     dispatchCustomEvent('form.submit');
-    const msg = block.querySelector('.new-account-success-msg');
-    if (msg) msg.remove();
-    const success = document.createElement('p');
-    success.className = 'new-account-success-msg';
-    success.textContent = 'Thank you. Your account has been created successfully.';
-    success.setAttribute('role', 'status');
-    if (submitSection) {
-      submitSection.insertBefore(success, submitSection.firstChild);
-    } else {
-      form.insertBefore(success, form.firstChild);
-    }
+    redirectAfterSubmit();
   });
 }
 

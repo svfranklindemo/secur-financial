@@ -169,6 +169,13 @@ function collectLoanPreapprovalFormData(form) {
   return data;
 }
 
+const REDIRECT_PATH_AFTER_PREAPPROVAL = '/en/submitted-successfully';
+function redirectAfterPreapprovalSubmit() {
+  setTimeout(() => {
+    window.location.href = REDIRECT_PATH_AFTER_PREAPPROVAL;
+  }, 2000);
+}
+
 function attachLoanPreapprovalFormSubmitHandler(block) {
   const form = block.querySelector('form');
   if (!form) return;
@@ -181,18 +188,8 @@ function attachLoanPreapprovalFormSubmitHandler(block) {
     // eslint-disable-next-line no-console
     console.log('Loan preapproval form data:', data);
 
-    const msg = block.querySelector('.loan-preapproval-form-success-msg');
-    if (msg) msg.remove();
-    const success = document.createElement('p');
-    success.className = 'loan-preapproval-form-success-msg';
-    success.textContent = 'Thank you. Your preapproval application has been submitted successfully.';
-    success.setAttribute('role', 'status');
-    if (submitSection) {
-      submitSection.insertBefore(success, submitSection.firstChild);
-    } else {
-      form.insertBefore(success, form.firstChild);
-    }
     dispatchCustomEvent('web.formFilledOut');
+    redirectAfterPreapprovalSubmit();
   });
 }
 

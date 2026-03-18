@@ -10,6 +10,14 @@ import { readBlockConfig, loadCSS } from '../../scripts/aem.js';
 import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 import { syncFormDataLayer, DEFAULT_FORM_FIELD_MAP, attachLiveFormSync } from '../../scripts/form-data-layer.js';
 
+const REDIRECT_PATH_AFTER_APPLICATION = '/en/submitted-successfully';
+
+function redirectAfterApplicationSubmit() {
+  setTimeout(() => {
+    window.location.href = REDIRECT_PATH_AFTER_APPLICATION;
+  }, 2000);
+}
+
 const APPLICATION_FORM_TEAL = '#0d9488';
 const APPLICATION_FORM_GREY = '#e5e7eb';
 
@@ -163,18 +171,7 @@ function attachApplicationFormSubmitHandler(block) {
     console.log('Application form data:', data);
 
     dispatchCustomEvent('form.submit');
-
-    const msg = block.querySelector('.application-form-success-msg');
-    if (msg) msg.remove();
-    const success = document.createElement('p');
-    success.className = 'application-form-success-msg';
-    success.textContent = 'Thank you. Your application has been submitted successfully.';
-    success.setAttribute('role', 'status');
-    if (submitSection) {
-      submitSection.insertBefore(success, submitSection.firstChild);
-    } else {
-      form.insertBefore(success, form.firstChild);
-    }
+    redirectAfterApplicationSubmit();
   });
 }
 
