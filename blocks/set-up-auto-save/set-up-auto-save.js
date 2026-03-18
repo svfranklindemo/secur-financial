@@ -1,4 +1,5 @@
 import { readBlockConfig } from '../../scripts/aem.js';
+import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 
 function getSubmitLink(block, config) {
   // readBlockConfig uses toClassName(label) so "Submit button link" -> "submit-button-link"
@@ -101,4 +102,12 @@ export default async function decorate(block) {
 
   const formModule = await import("../form/form.js");
   await formModule.default(formContainer);
+
+  const form = formContainer.querySelector("form");
+  if (form) {
+    const submitButton = form.querySelector('button[type="submit"]');
+    submitButton?.addEventListener("click", () => {
+      dispatchCustomEvent("auto-save-form-submit");
+    });
+  }
 }
