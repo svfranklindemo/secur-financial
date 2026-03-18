@@ -1,4 +1,4 @@
-import { createOptimizedPicture, readBlockConfig } from '../../scripts/aem.js';
+import { readBlockConfig } from '../../scripts/aem.js';
 import { isAuthorEnvironment } from '../../scripts/scripts.js';
 
 const FALLBACK_PRODUCT = {
@@ -36,7 +36,15 @@ function resolvePath(obj, path) {
 
 function normalizeImageUrl(value) {
   if (!value) return undefined;
-  let url = typeof value === 'string' ? value : value?._publishUrl || value?._authorUrl || value?._dynamicUrl || value?.url;
+  const useAuthorUrl = isAuthorEnvironment();
+  let url;
+  if (typeof value === 'string') {
+    url = value;
+  } else if (useAuthorUrl) {
+    url = value?._authorUrl || value?._publishUrl || value?._dynamicUrl || value?.url;
+  } else {
+    url = value?._publishUrl || value?._authorUrl || value?._dynamicUrl || value?.url;
+  }
   if (!url) return undefined;
   try {
     return new URL(url, window.location.href).href;
@@ -141,13 +149,45 @@ function appendProductIdToButton(buttonConfig, product) {
   return buttonConfig;
 }
 
+function buildDatalayerProductPayload(product) {
+  if (!product) return null;
+  return {
+    id: product.id || '',
+    name: product.name || '',
+    category: product.category || '',
+    description: product.description || '',
+    sku: product.sku || '',
+  };
+}
+
+function publishProductToDataLayer(productPayload) {
+  if (!productPayload || typeof window.updateDataLayer !== 'function') return;
+  const productId = String(productPayload.sku || productPayload.id || '').trim();
+  window.updateDataLayer(
+    {
+      product: { ...productPayload },
+      productId,
+    },
+    true
+  );
+}
+
+function attachProductDataLayerHandler(buttonConfig, productPayload) {
+  if (!buttonConfig?.node || !productPayload) return;
+  const anchor = buttonConfig.node.querySelector('a');
+  if (!anchor) return;
+  anchor.addEventListener('click', () => publishProductToDataLayer(productPayload));
+}
+
 function createCard(product, buttonConfig) {
   const photo = document.createElement('div');
   photo.className = 'product-card-image';
   const imageUrl = normalizeImageUrl(product.image);
   if (imageUrl) {
-    const picture = createOptimizedPicture(imageUrl, product.name || '', false, [{ width: '1200' }, { width: '750' }]);
-    photo.appendChild(picture);
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.alt = product.name || 'Product image';
+    photo.appendChild(img);
   } else {
     photo.classList.add('product-card-image--hidden');
   }
@@ -227,12 +267,14 @@ export default async function decorate(block) {
   block.innerHTML = '';
 
   const product = await fetchProductData(contentFragmentPath);
+  const productPayload = buildDatalayerProductPayload(product);
 
   const wrapper = document.createElement('div');
   wrapper.className = 'cards product-card-block';
   wrapper.classList.add(`product-card-layout-${layout}`);
   const list = document.createElement('ul');
   const productButtonConfig = appendProductIdToButton(buttonConfig, product);
+  attachProductDataLayerHandler(productButtonConfig, productPayload);
   list.append(createCard(product, productButtonConfig));
   wrapper.append(list);
   block.append(wrapper);
