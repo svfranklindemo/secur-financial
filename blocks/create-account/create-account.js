@@ -37,7 +37,6 @@ function buildCreateAccountFormDef() {
             name: "firstName",
             fieldType: "text-input",
             label: { value: "First name" },
-            required: true,
             properties: { colspan: 6 },
           },
           {
@@ -45,7 +44,6 @@ function buildCreateAccountFormDef() {
             name: "lastName",
             fieldType: "text-input",
             label: { value: "Last name" },
-            required: true,
             properties: { colspan: 6 },
           },
           {
@@ -53,7 +51,6 @@ function buildCreateAccountFormDef() {
             name: "email",
             fieldType: "email",
             label: { value: "Email address" },
-            required: true,
             autoComplete: "email",
             properties: { colspan: 12 },
           },
@@ -197,9 +194,7 @@ function attachCreateAccountSubmitHandler(block) {
       event.preventDefault();
       event.stopImmediatePropagation();
 
-      const requiredFields = ["firstName", "lastName", "email"];
       const formData = {};
-      let isValid = true;
 
       const allFields = form.querySelectorAll("input, select, textarea");
       allFields.forEach((field) => {
@@ -211,28 +206,17 @@ function attachCreateAccountSubmitHandler(block) {
         } else {
           formData[fieldName] = field.value;
         }
-
-        if (requiredFields.includes(fieldName)) {
-          if (!field.value || field.value.trim() === "") {
-            isValid = false;
-            field.classList.add("error");
-          } else {
-            field.classList.remove("error");
-          }
-        }
       });
 
       const dobValue = String(formData.dateOfBirth || "").trim();
       if (dobValue && !/^\d{4}-\d{2}-\d{2}$/.test(dobValue)) {
-        isValid = false;
         const dobField = form.querySelector('[name="dateOfBirth"]');
         dobField?.classList.add("error");
+        return;
       } else {
         const dobField = form.querySelector('[name="dateOfBirth"]');
         dobField?.classList.remove("error");
       }
-
-      if (!isValid) return;
 
       try {
         const registrationData = {
