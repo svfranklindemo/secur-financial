@@ -44,7 +44,7 @@ export default async function decorate(block) {
             fieldType: "drop-down",
             label: { value: "Transfer from" },
             enum: ["Checking Account"],
-            value: "Checking Account",
+            value: "checking-account",
             properties: { colspan: 12 },
           },
           {
@@ -52,8 +52,8 @@ export default async function decorate(block) {
             name: "transferTo",
             fieldType: "drop-down",
             label: { value: "Transfer to" },
-            enum: ["Select account"],
-            value: "Select account",
+            enum: ["Retirement Account"],
+            value: "retirement-account",
             properties: { colspan: 12 },
           },
           {
