@@ -192,10 +192,9 @@ function attachSubmitHandler(block) {
           dispatchCustomEvent(authoredEventType);
         }
 
-        showSuccessMessage(form, "Application submitted successfully.");
         setTimeout(() => {
           window.location.href = getSuccessRedirectPath();
-        }, 2000);
+        }, 0);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Child account application error:", error);
@@ -222,22 +221,6 @@ function getSuccessRedirectPath() {
   return prefix
     ? `${prefix}/${language}/child-account-application-step-1/child-account-upgrade-submitted`
     : `/${language}/child-account-application-step-1/child-account-upgrade-submitted`;
-}
-
-function showSuccessMessage(form, message) {
-  const existingMessages = form.querySelectorAll(".form-message");
-  existingMessages.forEach((msg) => msg.remove());
-
-  const messageEl = document.createElement("div");
-  messageEl.className = "form-message success";
-  messageEl.textContent = message;
-
-  const submitButton = form.querySelector('button[type="submit"]');
-  if (submitButton) {
-    submitButton.parentNode.insertBefore(messageEl, submitButton);
-  } else {
-    form.appendChild(messageEl);
-  }
 }
 
 function showErrorMessage(form, message) {

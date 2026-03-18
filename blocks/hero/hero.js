@@ -80,7 +80,10 @@ export default function decorate(block) {
   }
 
   /* Height: read from data-aue-prop first so UE value is used regardless of row order */
-  let heightVal = (config.height ?? block.querySelector('[data-aue-prop="height"]')?.textContent?.trim() ?? rowVal(10))?.toString?.()?.trim();
+  let heightVal = (config.height ?? block.querySelector('[data-aue-prop="height"]')?.textContent?.trim() ?? rowVal(10) ?? rowVal(11))?.toString?.()?.trim();
+  if (heightVal === 'false' || heightVal === 'true') {
+    heightVal = rowVal(11)?.toString?.()?.trim();
+  }
   if (heightVal) {
     if (/^\d+$/.test(heightVal)) heightVal = `${heightVal}px`;
     block.style.minHeight = heightVal;
