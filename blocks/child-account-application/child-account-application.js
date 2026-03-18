@@ -1,6 +1,8 @@
 import { readBlockConfig } from "../../scripts/aem.js";
 import { dispatchCustomEvent } from "../../scripts/custom-events.js";
 import { syncFormDataLayer, DEFAULT_FORM_FIELD_MAP, attachLiveFormSync } from "../../scripts/form-data-layer.js";
+import { isAuthorEnvironment } from "../../scripts/scripts.js";
+import { getPathDetails } from "../../scripts/utils.js";
 
 function applyButtonConfigToSubmitButton(block, config) {
   const submitButton = block.querySelector("form button[type='submit']");
@@ -191,6 +193,9 @@ function attachSubmitHandler(block) {
         }
 
         showSuccessMessage(form, "Application submitted successfully.");
+        setTimeout(() => {
+          window.location.href = getSuccessRedirectPath();
+        }, 2000);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Child account application error:", error);
@@ -203,6 +208,20 @@ function attachSubmitHandler(block) {
 
 function generateSubmissionId() {
   return `child_account_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+}
+
+function getSuccessRedirectPath() {
+  const authorPath = "/content/secur-financial/language-masters/en/child-account-application-step-1/child-account-upgrade-submitted.html";
+
+  if (isAuthorEnvironment()) {
+    return authorPath;
+  }
+
+  const { langCode, prefix } = getPathDetails();
+  const language = langCode || "en";
+  return prefix
+    ? `${prefix}/${language}/child-account-application-step-1/child-account-upgrade-submitted`
+    : `/${language}/child-account-application-step-1/child-account-upgrade-submitted`;
 }
 
 function showSuccessMessage(form, message) {
