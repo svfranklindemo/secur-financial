@@ -10,6 +10,52 @@ import { readBlockConfig, loadCSS } from '../../scripts/aem.js';
 import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 import { syncFormDataLayer, DEFAULT_FORM_FIELD_MAP, attachLiveFormSync } from '../../scripts/form-data-layer.js';
 
+const APPLICATION_FORM_WIZARD_NAME = 'Application Form';
+
+function buildStepMeta(stepIndex) {
+  return {
+    name: `application-form-step-${stepIndex + 1}`,
+    title: `Application Form Step ${stepIndex + 1}`,
+  };
+}
+
+function buildWizardPayload(currentStepIndex, totalSteps) {
+  if (!Number.isFinite(totalSteps) || totalSteps <= 0) return null;
+  const safeIndex = Number.isFinite(currentStepIndex)
+    ? Math.min(Math.max(currentStepIndex, 0), totalSteps - 1)
+    : 0;
+  const steps = Array.from({ length: totalSteps }, (_, idx) => buildStepMeta(idx));
+  return {
+    name: APPLICATION_FORM_WIZARD_NAME,
+    title: APPLICATION_FORM_WIZARD_NAME,
+    steps,
+    currentStep: safeIndex + 1,
+  };
+}
+
+function getTotalWizardSteps(wizard) {
+  if (!wizard) return 0;
+  return wizard.querySelectorAll('.panel-wrapper').length;
+}
+
+function updateApplicationFormWizardDataLayer(wizard, stepIndex) {
+  if (!window.updateDataLayer) return;
+  const totalSteps = getTotalWizardSteps(wizard);
+  const payload = buildWizardPayload(stepIndex, totalSteps);
+  if (!payload) return;
+  window.updateDataLayer({
+    wizard: payload,
+  });
+}
+
+const REDIRECT_PATH_AFTER_APPLICATION = '/en/submitted-successfully';
+
+function redirectAfterApplicationSubmit() {
+  setTimeout(() => {
+    window.location.href = REDIRECT_PATH_AFTER_APPLICATION;
+  }, 2000);
+}
+
 const APPLICATION_FORM_TEAL = '#0d9488';
 const APPLICATION_FORM_GREY = '#e5e7eb';
 
@@ -158,21 +204,13 @@ function attachApplicationFormSubmitHandler(block) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     e.stopPropagation();
+    formSubmitting = true;
     const data = collectApplicationFormData(form);
     // eslint-disable-next-line no-console
     console.log('Application form data:', data);
 
-    const msg = block.querySelector('.application-form-success-msg');
-    if (msg) msg.remove();
-    const success = document.createElement('p');
-    success.className = 'application-form-success-msg';
-    success.textContent = 'Thank you. Your application has been submitted successfully.';
-    success.setAttribute('role', 'status');
-    if (submitSection) {
-      submitSection.insertBefore(success, submitSection.firstChild);
-    } else {
-      form.insertBefore(success, form.firstChild);
-    }
+    dispatchCustomEvent('form-submit');
+    redirectAfterApplicationSubmit();
   });
 }
 
@@ -271,6 +309,7 @@ function attachApplicationFormStepEvents(wizard, form) {
       ? event.detail.prevStep.index
       : index - 1;
     if (Number.isFinite(prevIndex) && index > prevIndex) {
+      updateApplicationFormWizardDataLayer(wizard, index);
       dispatchCustomEvent('form-step');
     }
   };
@@ -284,18 +323,21 @@ function attachApplicationFormStepEvents(wizard, form) {
 
 let abandonEventsInitialized = false;
 let abandonedEventDispatched = false;
+let formSubmitting = false;
 
 function dispatchFormAbandonedEvent() {
-  if (abandonedEventDispatched) return;
+  if (abandonedEventDispatched || formSubmitting) return;
   abandonedEventDispatched = true;
   dispatchCustomEvent('form-abandoned');
 }
 
 function handleBeforeUnload() {
+  if (formSubmitting) return;
   dispatchFormAbandonedEvent();
 }
 
 function handleVisibilityChange() {
+  if (formSubmitting) return;
   if (document.visibilityState === 'hidden') {
     dispatchFormAbandonedEvent();
   }

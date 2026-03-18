@@ -10,6 +10,44 @@ import { readBlockConfig, loadCSS } from '../../scripts/aem.js';
 import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 import { syncFormDataLayer, DEFAULT_FORM_FIELD_MAP, attachLiveFormSync } from '../../scripts/form-data-layer.js';
 
+const LOAN_PREAPPROVAL_FORM_WIZARD_NAME = 'Loan Preapproval Form';
+
+function buildStepMeta(stepIndex) {
+  return {
+    name: `loan-preapproval-form-step-${stepIndex + 1}`,
+    title: `Loan Preapproval Step ${stepIndex + 1}`,
+  };
+}
+
+function buildWizardPayload(currentStepIndex, totalSteps) {
+  if (!Number.isFinite(totalSteps) || totalSteps <= 0) return null;
+  const safeIndex = Number.isFinite(currentStepIndex)
+    ? Math.min(Math.max(currentStepIndex, 0), totalSteps - 1)
+    : 0;
+  const steps = Array.from({ length: totalSteps }, (_, idx) => buildStepMeta(idx));
+  return {
+    name: LOAN_PREAPPROVAL_FORM_WIZARD_NAME,
+    title: LOAN_PREAPPROVAL_FORM_WIZARD_NAME,
+    steps,
+    currentStep: safeIndex + 1,
+  };
+}
+
+function getTotalWizardSteps(wizard) {
+  if (!wizard) return 0;
+  return wizard.querySelectorAll('.panel-wrapper').length;
+}
+
+function updateLoanPreapprovalWizardDataLayer(wizard, stepIndex) {
+  if (!window.updateDataLayer) return;
+  const totalSteps = getTotalWizardSteps(wizard);
+  const payload = buildWizardPayload(stepIndex, totalSteps);
+  if (!payload) return;
+  window.updateDataLayer({
+    wizard: payload,
+  });
+}
+
 function applyButtonConfigToSubmitButton(block, config) {
   const submitButton = block.querySelector("form button[type='submit']");
   if (!submitButton) return;
@@ -169,6 +207,13 @@ function collectLoanPreapprovalFormData(form) {
   return data;
 }
 
+const REDIRECT_PATH_AFTER_PREAPPROVAL = '/en/submitted-successfully';
+function redirectAfterPreapprovalSubmit() {
+  setTimeout(() => {
+    window.location.href = REDIRECT_PATH_AFTER_PREAPPROVAL;
+  }, 2000);
+}
+
 function attachLoanPreapprovalFormSubmitHandler(block) {
   const form = block.querySelector('form');
   if (!form) return;
@@ -181,17 +226,8 @@ function attachLoanPreapprovalFormSubmitHandler(block) {
     // eslint-disable-next-line no-console
     console.log('Loan preapproval form data:', data);
 
-    const msg = block.querySelector('.loan-preapproval-form-success-msg');
-    if (msg) msg.remove();
-    const success = document.createElement('p');
-    success.className = 'loan-preapproval-form-success-msg';
-    success.textContent = 'Thank you. Your preapproval application has been submitted successfully.';
-    success.setAttribute('role', 'status');
-    if (submitSection) {
-      submitSection.insertBefore(success, submitSection.firstChild);
-    } else {
-      form.insertBefore(success, form.firstChild);
-    }
+    dispatchCustomEvent('home-loan-application-submit');
+    redirectAfterPreapprovalSubmit();
   });
 }
 
@@ -253,6 +289,7 @@ function attachLoanPreapprovalFormStepEvents(wizard, form) {
       ? event.detail.prevStep.index
       : index - 1;
     if (Number.isFinite(prevIndex) && index > prevIndex) {
+      updateLoanPreapprovalWizardDataLayer(wizard, index);
       dispatchCustomEvent('form-step');
     }
   };

@@ -1,4 +1,5 @@
 import { readBlockConfig } from '../../scripts/aem.js';
+import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 
 function getSubmitLink(block, config) {
   // readBlockConfig uses toClassName(label) so "Submit button link" -> "submit-button-link"
@@ -43,7 +44,7 @@ export default async function decorate(block) {
             fieldType: "drop-down",
             label: { value: "Transfer from" },
             enum: ["Checking Account"],
-            value: "Checking Account",
+            value: "checking-account",
             properties: { colspan: 12 },
           },
           {
@@ -51,8 +52,8 @@ export default async function decorate(block) {
             name: "transferTo",
             fieldType: "drop-down",
             label: { value: "Transfer to" },
-            enum: ["Select account"],
-            value: "Select account",
+            enum: ["Retirement Account"],
+            value: "retirement-account",
             properties: { colspan: 12 },
           },
           {
@@ -88,4 +89,18 @@ export default async function decorate(block) {
 
   const formModule = await import("../form/form.js");
   await formModule.default(formContainer);
+  const form = formContainer.querySelector('form');
+  if (!form) return;
+  const REDIRECT_PATH_AFTER_TRANSFER = '/en/dashboard/submitted-successfully';
+  function redirectAfterTransferSubmit() {
+    setTimeout(() => {
+      window.location.href = REDIRECT_PATH_AFTER_TRANSFER;
+    }, 2000);
+  }
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dispatchCustomEvent('transfer-funds-form-submit');
+    redirectAfterTransferSubmit();
+  });
 }
