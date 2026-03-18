@@ -10,6 +10,44 @@ import { readBlockConfig, loadCSS } from '../../scripts/aem.js';
 import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 import { syncFormDataLayer, DEFAULT_FORM_FIELD_MAP, attachLiveFormSync } from '../../scripts/form-data-layer.js';
 
+const LOAN_PREAPPROVAL_FORM_WIZARD_NAME = 'Loan Preapproval Form';
+
+function buildStepMeta(stepIndex) {
+  return {
+    name: `loan-preapproval-form-step-${stepIndex + 1}`,
+    title: `Loan Preapproval Step ${stepIndex + 1}`,
+  };
+}
+
+function buildWizardPayload(currentStepIndex, totalSteps) {
+  if (!Number.isFinite(totalSteps) || totalSteps <= 0) return null;
+  const safeIndex = Number.isFinite(currentStepIndex)
+    ? Math.min(Math.max(currentStepIndex, 0), totalSteps - 1)
+    : 0;
+  const steps = Array.from({ length: totalSteps }, (_, idx) => buildStepMeta(idx));
+  return {
+    name: LOAN_PREAPPROVAL_FORM_WIZARD_NAME,
+    title: LOAN_PREAPPROVAL_FORM_WIZARD_NAME,
+    steps,
+    currentStep: safeIndex + 1,
+  };
+}
+
+function getTotalWizardSteps(wizard) {
+  if (!wizard) return 0;
+  return wizard.querySelectorAll('.panel-wrapper').length;
+}
+
+function updateLoanPreapprovalWizardDataLayer(wizard, stepIndex) {
+  if (!window.updateDataLayer) return;
+  const totalSteps = getTotalWizardSteps(wizard);
+  const payload = buildWizardPayload(stepIndex, totalSteps);
+  if (!payload) return;
+  window.updateDataLayer({
+    wizard: payload,
+  });
+}
+
 function applyButtonConfigToSubmitButton(block, config) {
   const submitButton = block.querySelector("form button[type='submit']");
   if (!submitButton) return;
@@ -251,6 +289,7 @@ function attachLoanPreapprovalFormStepEvents(wizard, form) {
       ? event.detail.prevStep.index
       : index - 1;
     if (Number.isFinite(prevIndex) && index > prevIndex) {
+      updateLoanPreapprovalWizardDataLayer(wizard, index);
       dispatchCustomEvent('form-step');
     }
   };
