@@ -217,7 +217,15 @@ function createButtonFromConfig(config) {
   if (!config || (!config.text && !config.link)) return null;
   const container = document.createElement('p');
   container.className = 'button-container';
-  if (config.style) container.classList.add(config.style);
+  const styleMap = {
+    button: 'cta-button',
+    'button-secondary': 'cta-button-secondary',
+    'button-dark': 'cta-button-dark',
+    link: 'cta-link',
+    default: 'cta-default',
+  };
+  const mappedStyle = styleMap[config.style] || config.style;
+  if (mappedStyle) container.classList.add(mappedStyle);
   if (config.customStyles) {
     config.customStyles.split(/[\s,]+/).forEach((part) => {
       const cls = part.trim();
@@ -225,6 +233,7 @@ function createButtonFromConfig(config) {
     });
   }
   const anchor = document.createElement('a');
+  anchor.classList.add('button');
   anchor.textContent = config.text || 'Learn more';
   if (config.link) anchor.href = config.link;
   if (config.eventType) anchor.dataset.buttonEventType = config.eventType;
