@@ -389,7 +389,8 @@ function updateDataLayerField(fieldName, value) {
   }
 
   if (fieldName.startsWith("pref")) {
-    current[pathParts[pathParts.length - 1]] = value === "true" || value === true;
+    const normalized = value === "true" || value === true ? "y" : "n";
+    current[pathParts[pathParts.length - 1]] = normalized;
   } else {
     current[pathParts[pathParts.length - 1]] = value || "";
   }
