@@ -75,11 +75,11 @@
             }
           ]
         },
-        {
-          "component": "select",
-          "name": "alignment",
-          "label": "Alignment",
-          "options": [
+      {
+        "component": "select",
+        "name": "alignment",
+        "label": "Alignment",
+        "options": [
             {
               "name": "Left",
               "value": "left"
@@ -93,6 +93,20 @@
               "value": "right"
             }
           ]
+        },
+        {
+          "component": "boolean",
+          "name": "hideDescription",
+          "label": "Hide Description",
+          "value": "false",
+          "valueType": "boolean"
+        },
+        {
+          "component": "boolean",
+          "name": "addBorder",
+          "label": "Add Border",
+          "value": "false",
+          "valueType": "boolean"
         },
         {
           "component": "text",

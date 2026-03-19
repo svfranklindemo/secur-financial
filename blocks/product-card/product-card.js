@@ -213,6 +213,10 @@ function createCard(product, buttonConfig) {
   return li;
 }
 
+function isTruthy(value) {
+  return value === true || String(value).trim().toLowerCase() === 'true';
+}
+
 function createButtonFromConfig(config) {
   if (!config || (!config.text && !config.link)) return null;
   const container = document.createElement('p');
@@ -261,6 +265,8 @@ export default async function decorate(block) {
   const layout = ['side-by-side', 'stacked', 'compact-stacked-card'].includes((config.layout || '').toLowerCase())
     ? config.layout.toLowerCase()
     : 'stacked';
+  const hideDescription = isTruthy(config.hidedescription ?? config.hideDescription);
+  const addBorder = isTruthy(config.addborder ?? config.addBorder);
   const buttonConfig = createButtonFromConfig({
     text: config.buttontext,
     link: config.link,
@@ -281,6 +287,8 @@ export default async function decorate(block) {
   const wrapper = document.createElement('div');
   wrapper.className = 'cards product-card-block';
   wrapper.classList.add(`product-card-layout-${layout}`);
+  if (hideDescription) wrapper.classList.add('product-card-hide-description');
+  if (addBorder) wrapper.classList.add('product-card-add-border');
   const list = document.createElement('ul');
   const productButtonConfig = appendProductIdToButton(buttonConfig, product);
   attachProductDataLayerHandler(productButtonConfig, productPayload);

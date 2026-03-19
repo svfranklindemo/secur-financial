@@ -836,6 +836,20 @@
         ]
       },
       {
+        "component": "boolean",
+        "name": "hideDescription",
+        "label": "Hide Description",
+        "value": "false",
+        "valueType": "boolean"
+      },
+      {
+        "component": "boolean",
+        "name": "addBorder",
+        "label": "Add Border",
+        "value": "false",
+        "valueType": "boolean"
+      },
+      {
         "component": "text",
         "name": "buttoneventtype",
         "label": "Button Event Type",

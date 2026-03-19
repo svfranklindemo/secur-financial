@@ -107,6 +107,17 @@
 .cards.product-card-block > ul > li {
     background: transparent;
 }
+
+.cards.product-card-block.product-card-add-border > ul > li {
+  box-shadow: 0 3px 20px #00000010;
+  border: 1px solid var(--light-color);
+  border-radius: 4px;
+}
+
+.cards.product-card-block.product-card-hide-description .product-card-description {
+  display: none;
+}
+
 .product-card-layout-stacked .product-card-image img {
   max-width: 400px;
   max-height: 260px;
