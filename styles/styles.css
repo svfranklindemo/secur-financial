@@ -1531,3 +1531,11 @@ main .section.home-getoffer-container > div:nth-child(1) .cards > ul > li img {
   background: transparent !important;
   color:#fff !important;
 }
+.securbank-theme .hero.image-background-text-left h1, .securbank-theme .hero.image-background-text-left h2, .securbank-theme .hero.image-background-text-left h3, .securbank-theme .hero.image-background-text-left h4, .securbank-theme .hero.image-background-text-left h5, .securbank-theme .hero.image-background-text-left h6, .securbank-theme .hero.image-background-text-left p{
+ margin:0;
+}
+.hero h1::after {
+    margin: unset;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
