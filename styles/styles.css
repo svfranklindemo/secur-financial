@@ -405,7 +405,9 @@ body.securbank-theme footer .footer a,
 body.securfinancial-theme footer .footer a {
   color: #000;
 }
-
+body.securbank-theme footer .footer a::after {
+  display:none;
+}
 body.securbank-theme footer .footer a:hover,
 body.securfinancial-theme footer .footer a:hover {
   color: var(--main-accent-color);
