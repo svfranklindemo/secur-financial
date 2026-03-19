@@ -273,7 +273,6 @@ picture {
 .hero.image-right h5,
 .hero.image-right h6,
 .hero.image-right p {
-  text-align: left;
   margin: 0;
   width: 100%;
   max-width: none;
