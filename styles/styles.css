@@ -408,6 +408,9 @@ body.securfinancial-theme footer .footer a {
 body.securbank-theme footer .footer a::after {
   display:none;
 }
+body.securbank-theme footer .footer a {
+    padding: 10px;
+}
 body.securbank-theme footer .footer a:hover,
 body.securfinancial-theme footer .footer a:hover {
   color: var(--main-accent-color);
