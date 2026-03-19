@@ -104,10 +104,17 @@ export default async function decorate(block) {
   await formModule.default(formContainer);
 
   const form = formContainer.querySelector("form");
+  function redirectAfterTransferSubmit() {
+    setTimeout(() => {
+      window.location.href = REDIRECT_PATH_AFTER_TRANSFER;
+    }, 2000);
+  }
   if (form) {
     const submitButton = form.querySelector('button[type="submit"]');
     submitButton?.addEventListener("click", () => {
       dispatchCustomEvent("auto-save-form-submit");
+      redirectAfterTransferSubmit();
     });
+
   }
 }
