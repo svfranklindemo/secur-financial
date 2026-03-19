@@ -228,9 +228,9 @@ function attachCreateAccountSubmitHandler(block) {
         const registrationData = {
           ...formData,
           communicationPreferences: {
-            email: formData.prefEmail === "true",
-            phone: formData.prefPhone === "true",
-            sms: formData.prefSms === "true",
+            email: formData.prefEmail === "true" ? "y" : "n",
+            phone: formData.prefPhone === "true" ? "y" : "n",
+            sms: formData.prefSms === "true" ? "y" : "n",
           },
           registeredAt: new Date().toISOString(),
           userId: generateUserId(),
