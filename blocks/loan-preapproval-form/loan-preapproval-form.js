@@ -208,7 +208,7 @@ function collectLoanPreapprovalFormData(form) {
   return data;
 }
 
-const REDIRECT_PATH_AFTER_PREAPPROVAL = '/en/submitted-successfully';
+const REDIRECT_PATH_AFTER_PREAPPROVAL = '/en/loans/home-loan-form-submitted';
 function redirectAfterPreapprovalSubmit() {
   setTimeout(() => {
     window.location.href = REDIRECT_PATH_AFTER_PREAPPROVAL;

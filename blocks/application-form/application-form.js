@@ -49,7 +49,7 @@ function updateApplicationFormWizardDataLayer(wizard, stepIndex) {
   });
 }
 
-const REDIRECT_PATH_AFTER_APPLICATION = '/en/submitted-successfully';
+const REDIRECT_PATH_AFTER_APPLICATION = '/en/credit-cards/credit-card-application/credit-card-application-submitted';
 
 function redirectAfterApplicationSubmit() {
   setTimeout(() => {
