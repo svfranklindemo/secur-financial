@@ -947,6 +947,54 @@
       },
       {
         "component": "text",
+        "name": "min-price",
+        "label": "Minimum Purchase Price",
+        "value": "100000",
+        "valueType": "string",
+        "description": "Lowest purchase price value available in the calculator slider"
+      },
+      {
+        "component": "text",
+        "name": "max-price",
+        "label": "Maximum Purchase Price",
+        "value": "3000000",
+        "valueType": "string",
+        "description": "Highest purchase price value available in the calculator slider"
+      },
+      {
+        "component": "text",
+        "name": "min-term",
+        "label": "Minimum Term (years)",
+        "value": "5",
+        "valueType": "string",
+        "description": "Shortest loan term available in the calculator slider"
+      },
+      {
+        "component": "text",
+        "name": "max-term",
+        "label": "Maximum Term (years)",
+        "value": "30",
+        "valueType": "string",
+        "description": "Longest loan term available in the calculator slider"
+      },
+      {
+        "component": "text",
+        "name": "min-downpayment",
+        "label": "Minimum Down Payment",
+        "value": "0",
+        "valueType": "string",
+        "description": "Lowest down payment value available in the calculator slider"
+      },
+      {
+        "component": "text",
+        "name": "max-downpayment",
+        "label": "Maximum Down Payment",
+        "value": "2700000",
+        "valueType": "string",
+        "description": "Highest down payment value available in the calculator slider"
+      },
+      {
+        "component": "text",
         "name": "apply-now-link",
         "label": "Apply Now Link",
         "value": "",
