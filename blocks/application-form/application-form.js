@@ -6,7 +6,7 @@
  * Back (grey) / step indicator (dots + "n/3 step") / Next or Submit (teal).
  */
 
-import { readBlockConfig, loadCSS } from '../../scripts/aem.js';
+import { readBlockConfig, loadCSS, applyFormCustomStyles } from '../../scripts/aem.js';
 import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 import { syncFormDataLayer, DEFAULT_FORM_FIELD_MAP, attachLiveFormSync } from '../../scripts/form-data-layer.js';
 
@@ -247,6 +247,7 @@ export default async function decorate(block) {
     setupApplicationFormStepIndicator(block);
     const form = block.querySelector('form');
     if (form) {
+      applyFormCustomStyles(form, config);
       restrictNumericFields(form);
       formatDateOfBirthInput(form);
     }

@@ -1,4 +1,4 @@
-import { readBlockConfig } from '../../scripts/aem.js';
+import { readBlockConfig, applyFormCustomStyles } from '../../scripts/aem.js';
 import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 
 function applyButtonConfigToSubmitButton(block, config, defaultEventType = 'transfer-funds-form-submit') {
@@ -111,6 +111,7 @@ export default async function decorate(block) {
       window.location.href = REDIRECT_PATH_AFTER_TRANSFER;
     }, 2000);
   }
+  applyFormCustomStyles(form, config);
   applyButtonConfigToSubmitButton(block, config, 'transfer-funds-form-submit');
   form.addEventListener('submit', (event) => {
     event.preventDefault();

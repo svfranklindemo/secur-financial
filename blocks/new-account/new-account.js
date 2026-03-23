@@ -6,7 +6,7 @@
  * Back visible on all steps (including step 1); dots + "n/3 step"; Submit only on last step.
  */
 
-import { readBlockConfig, loadCSS } from '../../scripts/aem.js';
+import { readBlockConfig, loadCSS, applyFormCustomStyles } from '../../scripts/aem.js';
 import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 import { syncFormDataLayer, DEFAULT_FORM_FIELD_MAP, attachLiveFormSync } from '../../scripts/form-data-layer.js';
 
@@ -316,6 +316,7 @@ export default async function decorate(block) {
     setupStepIndicator(block);
     const form = block.querySelector('form');
     if (form) {
+      applyFormCustomStyles(form, config);
       restrictNumericFields(form);
       formatDateOfBirthInput(form);
     }
