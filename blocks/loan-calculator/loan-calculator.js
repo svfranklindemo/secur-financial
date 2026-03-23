@@ -3,7 +3,7 @@
  * monthly payment output and Apply now CTA. Interest rate from UE (block config).
  */
 
-import { readBlockConfig, loadCSS, toClassName } from '../../scripts/aem.js';
+import { readBlockConfig, loadCSS } from '../../scripts/aem.js';
 import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 
 const DEFAULT_INTEREST_RATE = 6.5;
@@ -59,131 +59,40 @@ function buildSlider(id, label, value, min, max, step, formatter) {
   return { wrap, valueEl, input };
 }
 
-/** Get value from a config cell: use anchor href if present (UE link field), else textContent. */
-function getCellLinkOrText(container, prop) {
-  const cell = container.querySelector(`[data-aue-prop="${prop}"]`);
-  if (!cell) return '';
-  const anchor = cell.tagName === 'A' ? cell : cell.querySelector('a[href]');
-  if (anchor && anchor.href) {
-    const href = anchor.getAttribute('href') || anchor.href;
-    if (href && href !== '#') return href.trim();
-  }
-  const text = (cell.textContent ?? '').trim();
-  return text && text !== '#' ? text : '';
-}
-
-/** Read config from block: UE structure (data-aue-prop) or table (readBlockConfig). */
-function readConfigFromBlock(blockOrContainer) {
-  const el = blockOrContainer;
-  const byProp = el.querySelector('[data-aue-prop="interest-rate"]');
-  let applyNowLink = '';
-  let applyNowText = 'Apply now';
-
-  if (byProp) {
-    applyNowLink = getCellLinkOrText(el, 'apply-now-link');
-    applyNowText = (el.querySelector('[data-aue-prop="apply-now-text"]')?.textContent ?? 'Apply now').trim();
-  } else {
-    const tableCfg = readBlockConfig(el) || {};
-    applyNowLink = (tableCfg['apply-now-link'] ?? tableCfg.applynowlink ?? tableCfg.applyNowLink ?? '').toString().trim();
-    applyNowText = (tableCfg['apply-now-text'] ?? tableCfg.applynowtext ?? tableCfg.applyNowText ?? 'Apply now').toString().trim();
-  }
-
-  /* Fallback: block may contain .button-container a.button with the Apply link (e.g. from UE) */
-  if (!applyNowLink || applyNowLink === '#') {
-    const buttonLink = el.querySelector('.button-container a[href], .button-container a.button, p.button-container a[href]');
-    if (buttonLink) {
-      const href = (buttonLink.getAttribute('href') || buttonLink.href || '').trim();
-      if (href && href !== '#') applyNowLink = href;
-      const text = (buttonLink.textContent ?? '').trim();
-      /* Use link text as label only if it looks like a short label, not a URL path */
-      if (text && text !== href && text.length < 80 && !text.startsWith('/content/')) applyNowText = text;
-    }
-  }
-
-  if (byProp) {
-    return {
-      'interest-rate': (el.querySelector('[data-aue-prop="interest-rate"]')?.textContent ?? '').trim(),
-      'apply-now-link': applyNowLink,
-      'apply-now-text': applyNowText,
-      description: (el.querySelector('[data-aue-prop="description"]')?.textContent ?? 'Estimate how much you could be paying monthly for your loan').trim(),
-    };
-  }
-  const tableCfg = readBlockConfig(el) || {};
+function normalizeConfig(cfg) {
+  const minPriceRaw = parseNumber(cfg['min-price'] ?? cfg.minprice ?? cfg.minPrice, MIN_PRICE);
+  const maxPriceRaw = parseNumber(cfg['max-price'] ?? cfg.maxprice ?? cfg.maxPrice, MAX_PRICE);
+  const minTermRaw = parseNumber(cfg['min-term'] ?? cfg.minterm ?? cfg.minTerm, MIN_TERM);
+  const maxTermRaw = parseNumber(cfg['max-term'] ?? cfg.maxterm ?? cfg.maxTerm, MAX_TERM);
+  const minDownRaw = parseNumber(cfg['min-downpayment'] ?? cfg['min-down-payment'] ?? cfg.mindownpayment ?? cfg.minDownPayment, 0);
+  const maxDownRaw = parseNumber(cfg['max-downpayment'] ?? cfg['max-down-payment'] ?? cfg.maxdownpayment ?? cfg.maxDownPayment, MAX_PRICE);
+  const minPrice = Math.min(minPriceRaw, maxPriceRaw);
+  const maxPrice = Math.max(minPriceRaw, maxPriceRaw);
+  const minTerm = Math.min(minTermRaw, maxTermRaw);
+  const maxTerm = Math.max(minTermRaw, maxTermRaw);
+  const minDownPayment = Math.min(minDownRaw, maxDownRaw);
+  const maxDownPayment = Math.max(minDownRaw, maxDownRaw);
   return {
-    ...tableCfg,
-    'apply-now-link': applyNowLink || tableCfg['apply-now-link'] || tableCfg.applynowlink || tableCfg.applyNowLink,
-    'apply-now-text': applyNowText,
+    interestRate: parseNumber(cfg['interest-rate'] ?? cfg.interestrate ?? cfg.interestRate, DEFAULT_INTEREST_RATE),
+    applyNowLink: (cfg['apply-now-link'] ?? cfg.applynowlink ?? cfg.applyNowLink ?? '').toString().trim(),
+    applyNowText: (cfg['apply-now-text'] ?? cfg.applynowtext ?? cfg.applyNowText ?? 'Apply now').toString().trim(),
+    description: (cfg.description ?? 'Estimate how much you could be paying monthly for your loan').toString().trim(),
+    minPrice,
+    maxPrice,
+    minTerm,
+    maxTerm,
+    minDownPayment,
+    maxDownPayment,
   };
 }
 
 export default async function decorate(block) {
   const codeBasePath = window.hlx?.codeBasePath || '';
   await loadCSS(`${codeBasePath}/blocks/loan-calculator/loan-calculator.css`);
-
   block.classList.add('loan-calculator-block');
 
-  const hasUEStructure = block.querySelector('[data-aue-prop="interest-rate"]');
-  let configContainer = null;
-
-  if (!hasUEStructure) {
-    /* Table structure: wrap rows in one container (avoids tripling in UE tree) and mark data-aue-prop */
-    configContainer = document.createElement('div');
-    configContainer.className = 'loan-calculator-config';
-    configContainer.setAttribute('aria-hidden', 'true');
-    configContainer.hidden = true;
-    while (block.firstChild) {
-      configContainer.appendChild(block.firstChild);
-    }
-    block.appendChild(configContainer);
-    configContainer.querySelectorAll(':scope > div').forEach((row) => {
-      const cols = [...row.children];
-      if (cols.length >= 2 && cols[0].textContent) {
-        const prop = toClassName(cols[0].textContent);
-        if (prop) {
-          const valueCell = cols[1];
-          valueCell.setAttribute('data-aue-prop', prop);
-          const p = valueCell.querySelector('p');
-          if (p) p.setAttribute('data-aue-prop', prop);
-        }
-      }
-    });
-  } else {
-    /* UE structure: hide config divs but leave in place so UE can patch */
-    block.querySelectorAll('[data-aue-prop]').forEach((cell) => {
-      const row = cell.closest(':scope > div');
-      if (row) row.classList.add('loan-calculator-config-row');
-    });
-  }
-
-  const getConfigSource = () => (configContainer || block);
-  /** Returns normalized config from current source (table or UE data-aue-prop divs). */
-  const getConfig = () => {
-    const cfg = readConfigFromBlock(getConfigSource());
-    const minPriceRaw = parseNumber(cfg['min-price'] ?? cfg.minprice ?? cfg.minPrice, MIN_PRICE);
-    const maxPriceRaw = parseNumber(cfg['max-price'] ?? cfg.maxprice ?? cfg.maxPrice, MAX_PRICE);
-    const minTermRaw = parseNumber(cfg['min-term'] ?? cfg.minterm ?? cfg.minTerm, MIN_TERM);
-    const maxTermRaw = parseNumber(cfg['max-term'] ?? cfg.maxterm ?? cfg.maxTerm, MAX_TERM);
-    const minDownRaw = parseNumber(cfg['min-downpayment'] ?? cfg['min-down-payment'] ?? cfg.mindownpayment ?? cfg.minDownPayment, 0);
-    const maxDownRaw = parseNumber(cfg['max-downpayment'] ?? cfg['max-down-payment'] ?? cfg.maxdownpayment ?? cfg.maxDownPayment, MAX_PRICE);
-    const minPrice = Math.min(minPriceRaw, maxPriceRaw);
-    const maxPrice = Math.max(minPriceRaw, maxPriceRaw);
-    const minTerm = Math.min(minTermRaw, maxTermRaw);
-    const maxTerm = Math.max(minTermRaw, maxTermRaw);
-    const minDownPayment = Math.min(minDownRaw, maxDownRaw);
-    const maxDownPayment = Math.max(minDownRaw, maxDownRaw);
-    return {
-      interestRate: parseNumber(cfg['interest-rate'] ?? cfg.interestrate ?? cfg.interestRate, DEFAULT_INTEREST_RATE),
-      applyNowLink: (cfg['apply-now-link'] ?? cfg.applynowlink ?? cfg.applyNowLink ?? '').toString().trim(),
-      applyNowText: (cfg['apply-now-text'] ?? cfg.applynowtext ?? cfg.applyNowText ?? 'Apply now').toString().trim(),
-      description: (cfg.description ?? 'Estimate how much you could be paying monthly for your loan').toString().trim(),
-      minPrice,
-      maxPrice,
-      minTerm,
-      maxTerm,
-      minDownPayment,
-      maxDownPayment,
-    };
-  };
+  /** Returns normalized config from current source (key-value rows). */
+  const getConfig = () => normalizeConfig(readBlockConfig(block) || {});
 
   /** Builds calculator UI using getConfig() for rate/CTA/description. Call after UE replaces block content. */
   function buildCalculatorRoot() {
@@ -308,11 +217,6 @@ export default async function decorate(block) {
         window.location.assign(href);
       }, 2000);
     });
-    function updateCta() {
-      const c = getConfig();
-      cta.href = c.applyNowLink || '#';
-      cta.textContent = c.applyNowText;
-    }
     ctaWrap.append(cta);
     const descEl = document.createElement('p');
     descEl.className = 'loan-calculator-description';
@@ -327,58 +231,12 @@ export default async function decorate(block) {
       amountEl.textContent = formatCurrency(Math.round(payment));
     }
 
-    function updateDisplay() {
-      const c = getConfig();
-      descEl.textContent = c.description;
-      updateCta();
-      updatePayment();
-    }
-
     updatePayment();
     contentRoot.append(heading, grid);
-    return { root: contentRoot, updateDisplay };
+    return contentRoot;
   }
 
-  const { root: contentRoot, updateDisplay } = buildCalculatorRoot();
-
-  /* When UE updates Interest Rate (or other config), re-read and refresh monthly payment / CTA / description */
-  function applyConfigAndUpdate() {
-    updateDisplay();
-  }
-
-  if (configContainer) {
-    let refreshTimeout;
-    const configObserver = new MutationObserver(() => {
-      clearTimeout(refreshTimeout);
-      refreshTimeout = setTimeout(applyConfigAndUpdate, 150);
-    });
-    configObserver.observe(configContainer, { childList: true, subtree: true, characterData: true });
-  }
-
-  /* Fallback: poll when document has focus so UE edits are picked up */
-  const pollInterval = 500;
-  let lastRate = getConfig().interestRate;
-  setInterval(() => {
-    if (!document.hasFocus()) return;
-    const newRate = getConfig().interestRate;
-    if (newRate !== lastRate) {
-      applyConfigAndUpdate();
-      lastRate = newRate;
-    }
-  }, pollInterval);
-
-  /* When UE replaces entire block content (flat data-aue-prop divs), rebuild calculator and append */
-  const blockObserver = new MutationObserver(() => {
-    if (block.querySelector('.loan-calculator-root')) return;
-    if (!block.querySelector('[data-aue-prop="interest-rate"]')) return;
-    block.querySelectorAll('[data-aue-prop]').forEach((cell) => {
-      const row = cell.closest(':scope > div');
-      if (row) row.classList.add('loan-calculator-config-row');
-    });
-    const { root: newRoot } = buildCalculatorRoot();
-    block.appendChild(newRoot);
-  });
-  blockObserver.observe(block, { childList: true, subtree: true });
+  const contentRoot = buildCalculatorRoot();
 
   block.appendChild(contentRoot);
 }
