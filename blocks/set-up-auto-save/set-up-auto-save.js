@@ -4,8 +4,7 @@ import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 const REDIRECT_PATH_AFTER_AUTO_SAVE = '/en/dashboard/submitted-successfully';
 
 function getSubmitLink(block, config) {
-  // readBlockConfig uses toClassName(label) so "Submit button link" -> "submit-button-link"
-  const fromConfig = (config['submit-button-link'] ?? config['submit-link'] ?? config.redirectUrl ?? config.submitLink ?? '').toString().trim();
+  const fromConfig = (config.submitlink ?? '').toString().trim();
   if (fromConfig) return fromConfig;
   // UE may use data-aue-prop="submitLink" or "submit-link"
   const propEl = block.querySelector('[data-aue-prop="submitLink"]') || block.querySelector('[data-aue-prop="submit-link"]');
@@ -22,14 +21,14 @@ function getSubmitLink(block, config) {
 function applyButtonConfigToSubmitButton(block, config, defaultEventType = 'auto-save-form-submit') {
   const submitButton = block.querySelector("form button[type='submit']");
   if (!submitButton) return;
-  const eventType = config.buttoneventtype ?? config['button-event-type'];
+  const eventType = config.buttoneventtype;
   const normalizedEvent = (eventType && String(eventType).trim()) || defaultEventType;
   if (normalizedEvent) submitButton.dataset.buttonEventType = normalizedEvent;
-  const webhookUrl = config.buttonwebhookurl ?? config['button-webhook-url'];
+  const webhookUrl = config.buttonwebhookurl;
   if (webhookUrl && String(webhookUrl).trim()) submitButton.dataset.buttonWebhookUrl = String(webhookUrl).trim();
-  const formId = config.buttonformid ?? config['button-form-id'];
+  const formId = config.buttonformid;
   if (formId && String(formId).trim()) submitButton.dataset.buttonFormId = String(formId).trim();
-  const buttonData = config.buttondata ?? config['button-data'];
+  const buttonData = config.buttondata;
   if (buttonData && String(buttonData).trim()) submitButton.dataset.buttonData = String(buttonData).trim();
 }
 
