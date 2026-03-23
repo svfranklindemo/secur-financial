@@ -60,32 +60,41 @@ function buildSlider(id, label, value, min, max, step, formatter) {
 }
 
 function normalizeConfig(cfg) {
-  const minPriceRaw = parseNumber(cfg['min-price'] ?? cfg.minprice ?? cfg.minPrice, MIN_PRICE);
-  const maxPriceRaw = parseNumber(cfg['max-price'] ?? cfg.maxprice ?? cfg.maxPrice, MAX_PRICE);
-  const minTermRaw = parseNumber(cfg['min-term'] ?? cfg.minterm ?? cfg.minTerm, MIN_TERM);
-  const maxTermRaw = parseNumber(cfg['max-term'] ?? cfg.maxterm ?? cfg.maxTerm, MAX_TERM);
-  const minDownRaw = parseNumber(cfg['min-downpayment'] ?? cfg['min-down-payment'] ?? cfg.mindownpayment ?? cfg.minDownPayment, 0);
-  const maxDownRaw = parseNumber(cfg['max-downpayment'] ?? cfg['max-down-payment'] ?? cfg.maxdownpayment ?? cfg.maxDownPayment, MAX_PRICE);
-  const minPrice = Math.min(minPriceRaw, maxPriceRaw);
-  const maxPrice = Math.max(minPriceRaw, maxPriceRaw);
-  const minTerm = Math.min(minTermRaw, maxTermRaw);
-  const maxTerm = Math.max(minTermRaw, maxTermRaw);
-  const minDownPayment = Math.min(minDownRaw, maxDownRaw);
-  const maxDownPayment = Math.max(minDownRaw, maxDownRaw);
+  const interestRateRaw = cfg['interest-rate'];
+  const minPriceRaw = cfg['min-price'];
+  const maxPriceRaw = cfg['max-price'];
+  const minTermRaw = cfg['min-term'];
+  const maxTermRaw = cfg['max-term'];
+  const minDownRaw = cfg['min-downpayment'];
+  const maxDownRaw = cfg['max-downpayment'];
+  const applyNowLinkRaw = cfg['apply-now-link'];
+  const applyNowTextRaw = cfg['apply-now-text'];
+  const descriptionRaw = cfg.description;
+  const buttonEventTypeRaw = cfg.buttoneventtype;
+  const buttonWebhookUrlRaw = cfg.buttonwebhookurl;
+  const customStylesRaw = cfg.customstyles;
+
+  const minPriceValue = parseNumber(minPriceRaw, MIN_PRICE);
+  const maxPriceValue = parseNumber(maxPriceRaw, MAX_PRICE);
+  const minTermValue = parseNumber(minTermRaw, MIN_TERM);
+  const maxTermValue = parseNumber(maxTermRaw, MAX_TERM);
+  const minDownValue = parseNumber(minDownRaw, 0);
+  const maxDownValue = parseNumber(maxDownRaw, MAX_PRICE);
+
   return {
-    interestRate: parseNumber(cfg.interestrate, DEFAULT_INTEREST_RATE),
-    applyNowLink: (cfg.applynowlink ?? '').toString().trim(),
-    applyNowText: (cfg.applynowtext ?? cfg.applyNowText ?? 'Apply now').toString().trim(),
-    description: (cfg.description ?? 'Estimate how much you could be paying monthly for your loan').toString().trim(),
-    minPrice,
-    maxPrice,
-    minTerm,
-    maxTerm,
-    minDownPayment,
-    maxDownPayment,
-    buttonEventType: (cfg.buttoneventtype ?? '').toString().trim(),
-    buttonWebhookUrl: (cfg.buttonwebhookurl ?? '').toString().trim(),
-    customStyles: (cfg.customstyles ?? '').toString().trim(),
+    interestRate: parseNumber(interestRateRaw, DEFAULT_INTEREST_RATE),
+    applyNowLink: (applyNowLinkRaw ?? '').toString().trim(),
+    applyNowText: (applyNowTextRaw ?? 'Apply now').toString().trim(),
+    description: (descriptionRaw ?? 'Estimate how much you could be paying monthly for your loan').toString().trim(),
+    minPrice: Math.min(minPriceValue, maxPriceValue),
+    maxPrice: Math.max(minPriceValue, maxPriceValue),
+    minTerm: Math.min(minTermValue, maxTermValue),
+    maxTerm: Math.max(minTermValue, maxTermValue),
+    minDownPayment: Math.min(minDownValue, maxDownValue),
+    maxDownPayment: Math.max(minDownValue, maxDownValue),
+    buttonEventType: (buttonEventTypeRaw ?? '').toString().trim(),
+    buttonWebhookUrl: (buttonWebhookUrlRaw ?? '').toString().trim(),
+    customStyles: (customStylesRaw ?? '').toString().trim(),
   };
 }
 
