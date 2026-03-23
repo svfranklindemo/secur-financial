@@ -194,7 +194,7 @@ function attachSubmitHandler(block) {
 
         setTimeout(() => {
           window.location.href = getSuccessRedirectPath();
-        }, 0);
+        }, 1000);
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error("Child account application error:", error);
@@ -240,14 +240,8 @@ function showErrorMessage(form, message) {
 }
 
 const fieldToDataLayerMap = {
-  childFirstName: "person.child.name.firstName",
-  childLastName: "person.child.name.lastName",
-  parentFirstName: "person.guardian.name.firstName",
-  parentLastName: "person.guardian.name.lastName",
-  relationshipToChild: "person.guardian.relationship",
-  confirmInformation: "consents.childAccount.confirmInformation.val",
-  consentAccountOperation: "consents.childAccount.accountOperation.val",
-  acknowledgeFeatureChanges: "consents.childAccount.featureChanges.val",
+  parentFirstName: "person.name.firstName",
+  parentLastName: "person.name.lastName",
 };
 
 function updateDataLayerField(fieldName, value) {
