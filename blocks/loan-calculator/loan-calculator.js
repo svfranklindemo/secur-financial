@@ -238,7 +238,6 @@ export default async function decorate(block) {
       const c = getConfig();
       const monthlyPaymentFromDisplay = Math.round(parseNumber(amountEl.textContent, 0));
       const payload = {
-        event: 'calculation-finish',
         mortgage: {
           term: termYears,
           interestRate: c.interestRate,
@@ -248,7 +247,7 @@ export default async function decorate(block) {
         },
       };
       window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push(payload);
+      window.updateDataLayer(payload);
       dispatchCustomEvent('calculation-finish');
     }
 
