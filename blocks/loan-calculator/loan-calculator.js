@@ -73,9 +73,9 @@ function normalizeConfig(cfg) {
   const minDownPayment = Math.min(minDownRaw, maxDownRaw);
   const maxDownPayment = Math.max(minDownRaw, maxDownRaw);
   return {
-    interestRate: parseNumber(cfg['interest-rate'] ?? cfg.interestrate ?? cfg.interestRate, DEFAULT_INTEREST_RATE),
-    applyNowLink: (cfg['apply-now-link'] ?? cfg.applynowlink ?? cfg.applyNowLink ?? '').toString().trim(),
-    applyNowText: (cfg['apply-now-text'] ?? cfg.applynowtext ?? cfg.applyNowText ?? 'Apply now').toString().trim(),
+    interestRate: parseNumber(cfg.interestrate, DEFAULT_INTEREST_RATE),
+    applyNowLink: (cfg.applynowlink ?? '').toString().trim(),
+    applyNowText: (cfg.applynowtext ?? cfg.applyNowText ?? 'Apply now').toString().trim(),
     description: (cfg.description ?? 'Estimate how much you could be paying monthly for your loan').toString().trim(),
     minPrice,
     maxPrice,
@@ -83,24 +83,9 @@ function normalizeConfig(cfg) {
     maxTerm,
     minDownPayment,
     maxDownPayment,
-    buttonEventType: (
-      cfg['button-event-type']
-        ?? cfg.buttoneventtype
-        ?? cfg.buttonEventType
-        ?? ''
-    ).toString().trim(),
-    buttonWebhookUrl: (
-      cfg['button-webhook-url']
-        ?? cfg.buttonwebhookurl
-        ?? cfg.buttonWebhookUrl
-        ?? ''
-    ).toString().trim(),
-    customStyles: (
-      cfg.customStyles
-        ?? cfg.customstyles
-        ?? cfg['custom-styles']
-        ?? ''
-    ).toString().trim(),
+    buttonEventType: (cfg.buttoneventtype ?? '').toString().trim(),
+    buttonWebhookUrl: (cfg.buttonwebhookurl ?? '').toString().trim(),
+    customStyles: (cfg.customstyles ?? '').toString().trim(),
   };
 }
 
