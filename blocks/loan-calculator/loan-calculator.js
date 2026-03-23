@@ -17,6 +17,13 @@ function parseNumber(val, fallback = 0) {
   return Number.isFinite(n) ? n : fallback;
 }
 
+function clamp(value, min, max) {
+  let result = value;
+  if (Number.isFinite(min) && result < min) result = min;
+  if (Number.isFinite(max) && result > max) result = max;
+  return result;
+}
+
 function formatCurrency(n) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 }
@@ -152,11 +159,29 @@ export default async function decorate(block) {
   /** Returns normalized config from current source (table or UE data-aue-prop divs). */
   const getConfig = () => {
     const cfg = readConfigFromBlock(getConfigSource());
+    const minPriceRaw = parseNumber(cfg['min-price'] ?? cfg.minprice ?? cfg.minPrice, MIN_PRICE);
+    const maxPriceRaw = parseNumber(cfg['max-price'] ?? cfg.maxprice ?? cfg.maxPrice, MAX_PRICE);
+    const minTermRaw = parseNumber(cfg['min-term'] ?? cfg.minterm ?? cfg.minTerm, MIN_TERM);
+    const maxTermRaw = parseNumber(cfg['max-term'] ?? cfg.maxterm ?? cfg.maxTerm, MAX_TERM);
+    const minDownRaw = parseNumber(cfg['min-downpayment'] ?? cfg['min-down-payment'] ?? cfg.mindownpayment ?? cfg.minDownPayment, 0);
+    const maxDownRaw = parseNumber(cfg['max-downpayment'] ?? cfg['max-down-payment'] ?? cfg.maxdownpayment ?? cfg.maxDownPayment, MAX_PRICE);
+    const minPrice = Math.min(minPriceRaw, maxPriceRaw);
+    const maxPrice = Math.max(minPriceRaw, maxPriceRaw);
+    const minTerm = Math.min(minTermRaw, maxTermRaw);
+    const maxTerm = Math.max(minTermRaw, maxTermRaw);
+    const minDownPayment = Math.min(minDownRaw, maxDownRaw);
+    const maxDownPayment = Math.max(minDownRaw, maxDownRaw);
     return {
       interestRate: parseNumber(cfg['interest-rate'] ?? cfg.interestrate ?? cfg.interestRate, DEFAULT_INTEREST_RATE),
       applyNowLink: (cfg['apply-now-link'] ?? cfg.applynowlink ?? cfg.applyNowLink ?? '').toString().trim(),
       applyNowText: (cfg['apply-now-text'] ?? cfg.applynowtext ?? cfg.applyNowText ?? 'Apply now').toString().trim(),
       description: (cfg.description ?? 'Estimate how much you could be paying monthly for your loan').toString().trim(),
+      minPrice,
+      maxPrice,
+      minTerm,
+      maxTerm,
+      minDownPayment,
+      maxDownPayment,
     };
   };
 
@@ -166,9 +191,24 @@ export default async function decorate(block) {
     const contentRoot = document.createElement('div');
     contentRoot.className = 'loan-calculator-root';
 
-    let purchasePrice = 1028000;
+    const priceRange = { min: config.minPrice, max: config.maxPrice };
+    const termRange = { min: config.minTerm, max: config.maxTerm };
+    const downRange = { min: config.minDownPayment, max: config.maxDownPayment };
+
+    let purchasePrice = clamp(1028000, priceRange.min, priceRange.max);
+    let termYears = clamp(20, termRange.min, termRange.max);
     let downPayment = 100000;
-    let termYears = 20;
+
+    const getDownBounds = () => {
+      const boundMax = Math.min(downRange.max, purchasePrice);
+      const boundMin = Math.min(downRange.min, boundMax);
+      return {
+        min: boundMin,
+        max: Math.max(boundMin, boundMax),
+      };
+    };
+    const initialDownBounds = getDownBounds();
+    downPayment = clamp(downPayment, initialDownBounds.min, initialDownBounds.max);
 
     const heading = document.createElement('h2');
     heading.className = 'loan-calculator-heading';
@@ -180,37 +220,41 @@ export default async function decorate(block) {
     const left = document.createElement('div');
     left.className = 'loan-calculator-inputs';
 
-    const purchase = buildSlider('loan-purchase', 'Purchase price', purchasePrice, MIN_PRICE, MAX_PRICE, 1000, formatCurrency);
-    const maxDown = () => Math.min(purchasePrice * 0.9, MAX_PRICE);
+    const formatDownValue = (value) => {
+      const pct = purchasePrice > 0 ? Math.round((value / purchasePrice) * 100) : 0;
+      return `${formatCurrency(value)} (${pct}%)`;
+    };
+
+    const purchase = buildSlider('loan-purchase', 'Purchase price', purchasePrice, priceRange.min, priceRange.max, 1000, formatCurrency);
     purchase.input.addEventListener('input', () => {
       purchasePrice = Number(purchase.input.value);
       purchase.valueEl.textContent = formatCurrency(purchasePrice);
-      const cap = maxDown();
-      down.input.max = cap;
-      if (downPayment > cap) {
-        downPayment = Math.round(cap / 1000) * 1000;
+      const { min: newDownMin, max: newDownMax } = getDownBounds();
+      down.input.min = newDownMin;
+      down.input.max = newDownMax;
+      if (downPayment > newDownMax) {
+        downPayment = newDownMax;
         down.input.value = downPayment;
-        const pct = Math.round((downPayment / purchasePrice) * 100);
-        down.valueEl.textContent = `${formatCurrency(downPayment)} (${pct}%)`;
+        down.valueEl.textContent = formatDownValue(downPayment);
+      } else if (downPayment < newDownMin) {
+        downPayment = newDownMin;
+        down.input.value = downPayment;
+        down.valueEl.textContent = formatDownValue(downPayment);
       }
       updatePayment();
     });
     left.append(purchase.wrap);
 
-    downPayment = Math.min(downPayment, maxDown());
-    const down = buildSlider('loan-down', 'Down payment', downPayment, 0, maxDown(), 1000, (v) => {
-      const pct = purchasePrice > 0 ? Math.round((v / purchasePrice) * 100) : 0;
-      return `${formatCurrency(v)} (${pct}%)`;
-    });
+    const { min: downMin, max: downMax } = initialDownBounds;
+    const down = buildSlider('loan-down', 'Down payment', downPayment, downMin, downMax, 1000, formatDownValue);
     down.input.addEventListener('input', () => {
       downPayment = Number(down.input.value);
-      const pct = Math.round((downPayment / purchasePrice) * 100);
-      down.valueEl.textContent = `${formatCurrency(downPayment)} (${pct}%)`;
+      down.valueEl.textContent = formatDownValue(downPayment);
       updatePayment();
     });
     left.append(down.wrap);
 
-    const term = buildSlider('loan-term', 'Term', termYears, MIN_TERM, MAX_TERM, 1, (v) => `${v} years`);
+    const term = buildSlider('loan-term', 'Term', termYears, termRange.min, termRange.max, 1, (v) => `${v} years`);
     term.input.addEventListener('input', () => {
       termYears = Number(term.input.value);
       term.valueEl.textContent = `${termYears} years`;
