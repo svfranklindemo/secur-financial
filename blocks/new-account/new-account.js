@@ -13,14 +13,14 @@ import { syncFormDataLayer, DEFAULT_FORM_FIELD_MAP, attachLiveFormSync } from '.
 function applyButtonConfigToSubmitButton(block, config, defaultEventType = 'form-submit') {
   const submitButton = block.querySelector("form button[type='submit']");
   if (!submitButton) return;
-  const eventType = config.buttoneventtype ?? config['button-event-type'];
+  const eventType = config.buttoneventtype;
   const normalizedEvent = (eventType && String(eventType).trim()) || defaultEventType;
   if (normalizedEvent) submitButton.dataset.buttonEventType = normalizedEvent;
-  const webhookUrl = config.buttonwebhookurl ?? config['button-webhook-url'];
+  const webhookUrl = config.buttonwebhookurl;
   if (webhookUrl && String(webhookUrl).trim()) submitButton.dataset.buttonWebhookUrl = String(webhookUrl).trim();
-  const formId = config.buttonformid ?? config['button-form-id'];
+  const formId = config.buttonformid;
   if (formId && String(formId).trim()) submitButton.dataset.buttonFormId = String(formId).trim();
-  const buttonData = config.buttondata ?? config['button-data'];
+  const buttonData = config.buttondata;
   if (buttonData && String(buttonData).trim()) submitButton.dataset.buttonData = String(buttonData).trim();
 }
 
