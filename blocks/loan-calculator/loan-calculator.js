@@ -4,6 +4,7 @@
  */
 
 import { readBlockConfig, loadCSS, toClassName } from '../../scripts/aem.js';
+import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 
 const DEFAULT_INTEREST_RATE = 6.5;
 const MIN_PRICE = 100000;
@@ -232,8 +233,37 @@ export default async function decorate(block) {
     cta.className = 'loan-calculator-apply-button';
     cta.href = config.applyNowLink || '#';
     cta.textContent = config.applyNowText;
+
+    function pushCalculationFinishEvent() {
+      const c = getConfig();
+      const monthlyPaymentFromDisplay = Math.round(parseNumber(amountEl.textContent, 0));
+      const payload = {
+        event: 'calculation-finish',
+        mortgage: {
+          term: termYears,
+          interestRate: c.interestRate,
+          downPayment,
+          monthlyPayment: monthlyPaymentFromDisplay,
+          price: purchasePrice,
+        },
+      };
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push(payload);
+      dispatchCustomEvent('calculation-finish');
+    }
+
     cta.addEventListener('click', (e) => {
-      if (!cta.href || cta.href === '#' || cta.href.endsWith('#')) e.preventDefault();
+      pushCalculationFinishEvent();
+      const href = cta.href || '';
+      const invalidHref = !href || href === '#' || href.endsWith('#');
+      if (invalidHref) {
+        e.preventDefault();
+        return;
+      }
+      e.preventDefault();
+      setTimeout(() => {
+        window.location.assign(href);
+      }, 2000);
     });
     function updateCta() {
       const c = getConfig();
