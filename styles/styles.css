@@ -374,14 +374,14 @@ body.securfinancial-theme button {
 
 body.securbank-theme h1,
 body.securfinancial-theme h1 {
-  font-size: 39px;
-  line-height: 1.5;
+  font-size: 39px !important;
+  line-height: 1.5!important;
 }
 
 body.securbank-theme h2,
 body.securfinancial-theme h2 {
-  font-size: 36px;
-  line-height: 1.5;
+  font-size: 36p!important;
+  line-height: 1.5!important;
 }
 
 body.securbank-theme header .nav-wrapper,
