@@ -521,6 +521,16 @@ body.wehealthcare-theme .lang-switcher .lang-button{
   border: 1px solid rgb(0 0 0 / 40%);
 }
 
+body.wehealthcare-theme a.sign-in-btn,
+body.fly-theme a.sign-in-btn {
+  text-align: center;
+  color: #000;
+  border: 1px solid rgb(0 0 0 / 40%);
+  align-items: center;
+  padding: 10px;
+  padding-left: 25px;
+}
+
 body.fly-theme header nav .nav-sections ul > li > a {
   color: #000;
 }
