@@ -135,7 +135,7 @@ function prefillEmail(form) {
   if (!storedEmail) {
     try {
       const reg = JSON.parse(
-        localStorage.getItem("wkndfly_registered_user") || "{}"
+        localStorage.getItem("secur_financial_registered_user") || "{}"
       );
       if (reg.email) {
         storedEmail = reg.email;
@@ -317,7 +317,7 @@ function attachSignInHandler(block) {
     // Sign-in successful - Load user data from registration
     try {
       // Set authentication flag in localStorage
-      localStorage.setItem("wkndfly_user_logged_in", "true");
+      localStorage.setItem("secur_financial_user_logged_in", "true");
 
       localStorage.setItem(
         "com.adobe.reactor.dataElements.Identities",

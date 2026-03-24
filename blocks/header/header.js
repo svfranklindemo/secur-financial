@@ -534,10 +534,10 @@ function createUserProfile(container, langCode) {
  */
 function handleSignOut(langCode) {
   // Clear authentication flag
-  localStorage.removeItem("wkndfly_user_logged_in");
+  localStorage.removeItem("secur_financial_user_logged_in");
 
   // Optional: Clear other user data (uncomment if needed)
-  // localStorage.removeItem('wkndfly_registered_user');
+  // localStorage.removeItem('secur_financial_registered_user');
   // localStorage.removeItem('com.adobe.reactor.dataElements.Profile - Email');
 
   // Clear dataLayer user information
@@ -734,6 +734,15 @@ export default async function decorate(block) {
         }
       });
     });
+
+    // Hide nav items between position 4 and last (exclusive) for unauthenticated users
+    const navItems = navSections.querySelectorAll(':scope .default-content-wrapper > ul > li');
+    const isUserLoggedIn = localStorage.getItem('secur_financial_user_logged_in') === 'true';
+    if (!isUserLoggedIn && navItems.length > 5) {
+      for (let i = 4; i < navItems.length - 1; i++) {
+        navItems[i].classList.add('nav-auth-hidden');
+      }
+    }
   }
 
   const navTools = nav.querySelector('.nav-tools');
@@ -742,7 +751,7 @@ export default async function decorate(block) {
     // Find the <li> that contains the Sign In link so we can replace it with the user profile
     const signInLi = nav.querySelector('.nav-sections a[href*="sign-in"]')?.closest('li');
     // Add User Profile in place of Sign In when logged in
-    const isLoggedIn = localStorage.getItem("wkndfly_user_logged_in") === "true";
+    const isLoggedIn = localStorage.getItem("secur_financial_user_logged_in") === "true";
     if (isLoggedIn && signInLi) {
       createUserProfile(signInLi, langCode);
     }
