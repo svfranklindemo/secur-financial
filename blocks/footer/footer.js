@@ -6,6 +6,20 @@ import {
   getLanguage, getSiteName, TAG_ROOT, PATH_PREFIX, fetchLanguageNavigation,
 } from '../../scripts/utils.js';
 
+function fireAdobeFooterBeacon() {
+  const pageName = getMetadata('pagename') || document.title || '';
+  const pageUrl = window.location.href;
+
+  if (!pageName || !pageUrl || window.__securFooterAdobeBeaconSent) {
+    return;
+  }
+
+  window.__securFooterAdobeBeaconSent = true;
+
+  const beacon = new Image();
+  beacon.src = `https://ssharedservices.sc.omtrdc.net/b/ss/adbess-livedemosysdev/1/JS-2.27.0-LGPQ/s18858355124093?AQB=1&pageName=${encodeURIComponent(pageName)}&g=${encodeURIComponent(pageUrl)}&c2=${encodeURIComponent(pageUrl)}&events=event1&v3=Live%20Demo&v8=livedemo%40adobe.com&v20=${encodeURIComponent(pageName)}&v21=Live%20Demos%20Website&v250=Live%20Demo%3A%20Page%20View&mid=43862339102679297631836999049016014710&mcorgid=60306A9C56F40F607F000101%40AdobeOrg&AQE=1`;
+}
+
 /**
  * loads and decorates the footer
  * @param {Element} block The footer block element
@@ -43,4 +57,5 @@ export default async function decorate(block) {
   while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
 
   block.append(footer);
+  fireAdobeFooterBeacon();
 }
