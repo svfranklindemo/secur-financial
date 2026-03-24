@@ -545,6 +545,13 @@ body.fly-theme .lang-switcher .lang-button {
 }
 
 body.securbank-theme header nav .nav-sections ul > li > a {
+  color: rgb(129, 138, 150);
+  font-size: 17px;
+}
+
+body.securbank-theme header nav .nav-sections ul > li.active > a,
+body.securbank-theme header nav .nav-sections ul > li > a.active,
+body.securbank-theme header nav .nav-sections ul > li > a[aria-current='page'] {
   color: #000;
 }
 
