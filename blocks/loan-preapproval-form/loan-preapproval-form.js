@@ -310,6 +310,8 @@ function attachLoanPreapprovalFormStepEvents(wizard, form) {
     syncFormDataLayer(form, DEFAULT_FORM_FIELD_MAP);
     attachLiveFormSync(form, DEFAULT_FORM_FIELD_MAP);
   }
+  const initialIndex = getLoanPreapprovalWizardStepIndex(wizard);
+  updateLoanPreapprovalWizardDataLayer(wizard, initialIndex);
   dispatchCustomEvent('form-start');
 }
 
