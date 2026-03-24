@@ -361,6 +361,9 @@
 .cards > ul > li.cards-card--overlay-background-off .cards-card-body {
   background-color: transparent;
 }
+li.teaser-card.cards-card--overlay-background-off .cards-card-body {
+    background-color: transparent !important;
+}
 .cards > ul > li.teaser-overlay .cards-card-body div[data-aue-type="richtext"] {
   width: 50%;
 }
