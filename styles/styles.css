@@ -761,7 +761,7 @@ main > .section {
 
 /* When full width is not selected, constrain section to content width and center */
 main > .section:not([data-sec-full-width="true"]) {
-  max-width: 1200px;
+  max-width: 1264px;
   margin-left: auto !important;
   margin-right: auto !important;
 }
@@ -1410,30 +1410,30 @@ table {
 
 /* .section.home-getoffer-container: 2 columns – left: Mortgage + Get offer (one dark block); right: Credit + Savings cards. Equal row heights so right column = left height, each right card = half. */
 main .section.home-getoffer-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 0;
-  align-items: stretch;
+  column-count: 2;
+  column-gap: 24px;
   margin: 0;
   padding: 0;
-  min-height: 400px; /* so 1fr 1fr can split space; grid grows with left column content */
 }
 main .section.home-getoffer-container > div {
+  display: inline-block;
+  width: 100%;
   max-width: none;
   margin: 0;
   padding: 0;
+  margin-bottom: 24px;
+  break-inside: avoid;
+  vertical-align: top;
 }
 /* Left column – first item (Mortgage card): dark background, no border/shadow */
 main .section.home-getoffer-container > div:nth-child(1) {
-  grid-column: 1;
-  grid-row: 1;
   background-color: #1a232f;
   color: #fff;
   box-sizing: border-box;
   border: none;
   box-shadow: none;
   border-radius: 0;
+  margin-bottom: 0;
 }
 main .section.home-getoffer-container > div:nth-child(1) .cards > ul > li {
   border: none;
@@ -1449,29 +1449,40 @@ main .section.home-getoffer-container > div:nth-child(1) .cards-card-body a {
 }
 /* Left column – Get offer form: same dark block, flush with card above, no border/radius, full width */
 main .section.home-getoffer-container > div:nth-child(2) {
-  grid-column: 1;
-  grid-row: 2;
   background-color: #1a232f;
   color: #fff;
-  padding: 24px;
-  padding-top: 0;
+  padding: 0 48px 40px;
   box-sizing: border-box;
   border: none;
   box-shadow: none;
   border-radius: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
-main .section.home-getoffer-container > div:nth-child(2) .get-offer-wrapper,main .section.home-getoffer-container > div {
+main .section.home-getoffer-container > div:nth-child(2) .get-offer-wrapper {
   max-width: none;
   width: 100%;
-  align-items: stretch;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border-radius: 0;
 }
 main .section.home-getoffer-container > div:nth-child(2) .get-offer-input {
-  max-width: none;
   width: 100%;
+  max-width: none;
+  padding: 1rem 1.25rem;
+  font-size: 1.05rem;
 }
 main .section.home-getoffer-container > div:nth-child(2) .get-offer-button {
   width: auto;
-  align-self: center;
+  min-width: 168px;
+  padding: 0.95rem 2rem;
+  align-self: flex-start;
+  background: #cbe6f0;
+  color: #1a232f;
+  font-weight: 700;
 }
 /* Right column cards: no border, no box-shadow; each fills half the column height; small gap between them */
 main .section.home-getoffer-container > div:nth-child(3),
@@ -1501,22 +1512,40 @@ main .section.home-getoffer-container > div:nth-child(4) .cards > ul > li {
   box-shadow: none;
   height: 100%;
   min-height: 0;
+  padding:20px;
 }
 main .section.home-getoffer-container > div:nth-child(3) {
-  grid-column: 2;
-  grid-row: 1;
-  margin-bottom: 12px;
+  margin-top: 0;
 }
 
 main .section.home-getoffer-container .cards > ul {
   padding-top: 0;
 }
 main .section.home-getoffer-container > div:nth-child(4) {
-  grid-column: 2;
-  grid-row: 2;
+  margin-top: 0;
 }
 main .section.home-getoffer-container > div:nth-child(1) .cards > ul > li img {
   width: 65%;
+}
+
+@media (width <= 767px) {
+  main .section.home-getoffer-container {
+    column-count: 1;
+    column-gap: 0;
+  }
+
+  main .section.home-getoffer-container > div:nth-child(2) {
+    padding: 0 24px 32px;
+    margin-top: 0;
+  }
+
+  main .section.home-getoffer-container > div:nth-child(2) .get-offer-wrapper {
+    align-items: stretch;
+  }
+
+  main .section.home-getoffer-container > div:nth-child(2) .get-offer-button {
+    align-self: center;
+  }
 }
 
 .custom-text-class div {

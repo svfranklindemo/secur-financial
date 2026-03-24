@@ -232,7 +232,7 @@
   min-width: 0;
 }
 .cards > ul > li.image-left .cards-card-body {
-  flex: 0 0 50%;
+  flex: 0 0 41%;
   min-width: 0;
   box-sizing: border-box;
   padding: 0;
