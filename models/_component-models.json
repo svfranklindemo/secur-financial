@@ -583,6 +583,14 @@
         "value": "",
         "valueType": "string",
         "description": "Comma-separated key,value pairs e.g. key1,value1,key2,value2"
+      },
+      {
+        "component": "boolean",
+        "name": "textoverlay",
+        "label": "Text Overlay",
+        "value": "true",
+        "valueType": "boolean",
+        "description": "Keep the hero text overlay enabled. Turn off for transparent text background and darker image."
       }
     ]
   },

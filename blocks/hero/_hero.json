@@ -229,6 +229,14 @@
           "value": "",
           "valueType": "string",
           "description": "Custom styles for the hero section"
+        },
+        {
+          "component": "boolean",
+          "name": "textoverlay",
+          "label": "Text Overlay",
+          "value": "true",
+          "valueType": "boolean",
+          "description": "Keep the hero text overlay enabled. Turn off for transparent text background and darker image."
         }
       ]
     }
