@@ -375,6 +375,11 @@ header nav .nav-sections ul > li > ul > li {
   }
 }
 
+/* hide nav items that require authentication */
+header nav .nav-sections .nav-auth-hidden {
+  display: none;
+}
+
 /* tools */
 header nav .nav-tools {
   grid-area: tools;
