@@ -399,6 +399,14 @@
         "value": "",
         "valueType": "string",
         "description": "Comma-separated key,value pairs"
+      },
+      {
+        "component": "boolean",
+        "name": "overlaybackground",
+        "label": "Overlay Background",
+        "value": "true",
+        "valueType": "boolean",
+        "description": "Keep the teaser overlay background at 50% opacity. Turn off for a solid black overlay."
       }
     ]
   },

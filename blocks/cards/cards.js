@@ -15,22 +15,43 @@ export default function decorate(block) {
   const ul = document.createElement('ul');
   [...block.children].forEach((row) => {
     const li = document.createElement('li');
+
+    const getConfigValue = (propName, fallbackIndex) => {
+      const propEl = row.querySelector(`p[data-aue-prop="${propName}"]`) || row.querySelector(`[data-aue-prop="${propName}"]`);
+      if (propEl?.textContent?.trim()) return propEl.textContent.trim();
+      return row.children[fallbackIndex]?.querySelector?.('p')?.textContent?.trim()
+        || row.children[fallbackIndex]?.textContent?.trim()
+        || '';
+    };
+
+    const normalizeCtaStyle = (value) => {
+      const styleMap = {
+        button: 'cta-button',
+        'button-secondary': 'cta-button-secondary',
+        'button-dark': 'cta-button-dark',
+        link: 'cta-link',
+        default: 'default',
+        'cta-button': 'cta-button',
+        'cta-button-secondary': 'cta-button-secondary',
+        'cta-button-dark': 'cta-button-dark',
+        'cta-link': 'cta-link',
+        'cta-default': 'default',
+      };
+      return styleMap[(value || '').trim()] || (value || '').trim() || 'default';
+    };
     
     // Read card style from the third div (index 2)
-    const styleDiv = row.children[2];
-    const styleParagraph = styleDiv?.querySelector('p');
-    const cardStyle = styleParagraph?.textContent?.trim() || 'default';
+    const cardStyle = getConfigValue('style', 2) || 'default';
     if (cardStyle && cardStyle !== 'default') {
       li.className = cardStyle;
     }
 
-    // Read CTA style by attribute so it works regardless of column order (AEM authoring)
-    const ctaStyleEl = row.querySelector('p[data-aue-prop="ctastyle"]') || row.querySelector('[data-aue-prop="ctastyle"]');
-    const ctaStyle = ctaStyleEl?.textContent?.trim() || 'default';
+    // Read CTA style by prop when author metadata exists, or by the known config column on publish.
+    const ctaStyle = normalizeCtaStyle(getConfigValue('ctastyle', 4));
     
-    // Read image style by attribute so it works regardless of column order (AEM authoring)
-    const imageStyleParagraph = row.querySelector('p[data-aue-prop="imagestyle"]') || row.querySelector('[data-aue-prop="imagestyle"]');
-    const imageStyle = imageStyleParagraph?.textContent?.trim() || '';
+    // Read image style by prop when author metadata exists, or by the known config column on publish.
+    const imageStyle = getConfigValue('imagestyle', 3) || '';
+    const overlayBackgroundEnabled = (getConfigValue('overlaybackground', 13) || 'true').toLowerCase() !== 'false';
 
     const getCell = (idx) => (row.children[idx]?.querySelector?.('p')?.textContent?.trim()
       || row.children[idx]?.textContent?.trim() || '').toString();
@@ -49,7 +70,7 @@ export default function decorate(block) {
     };
 
     // Background color: from data-aue-prop, or from any cell/link that contains only a hex value (UE may store it in link or button field)
-    let bgColorRaw = (row.querySelector('p[data-aue-prop="backgroundcolor"]') || row.querySelector('[data-aue-prop="backgroundcolor"]'))?.textContent?.trim() || '';
+    let bgColorRaw = getConfigValue('backgroundcolor', -1);
     if (!bgColorRaw) {
       const hexLink = row.querySelector('a[href^="#"]');
       if (hexLink && isHexColor(hexLink.getAttribute('href') || '')) bgColorRaw = (hexLink.getAttribute('href') || '').replace(/^#/, '');
@@ -69,14 +90,17 @@ export default function decorate(block) {
     const buttonFormId = getCell(10);
     const buttonData = getCell(11);
     // Read custom styles by data-aue-prop so it works regardless of column order (UE authoring)
-    const customStylesEl = row.querySelector('p[data-aue-prop="customstyles"]') || row.querySelector('[data-aue-prop="customstyles"]');
-    const customStylesRaw = customStylesEl?.textContent?.trim() || getCell(12) || '';
+    const customStylesRaw = getConfigValue('customstyles', 12) || getCell(12) || '';
 
     if (customStylesRaw) {
       customStylesRaw.split(/[\s,]+/).forEach((part) => {
         const cls = toClassName(part.trim());
         if (cls) li.classList.add(cls);
       });
+    }
+
+    if (!overlayBackgroundEnabled) {
+      li.classList.add('cards-card--overlay-background-off');
     }
 
     li.classList.add(`cards-card--alignment-${alignment}`);

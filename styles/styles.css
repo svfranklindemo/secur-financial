@@ -951,6 +951,45 @@ main .section.section-horizontal-widths > * {
   min-width: 0;
 }
 
+main .section.wemadeit-section.section-horizontal-widths {
+  align-items: flex-start !important;
+}
+
+main .section.wemadeit-section.section-horizontal-widths > .cards-wrapper {
+  align-self: flex-start;
+}
+
+main .section.wemadeit-section.section-horizontal-widths > .cards-wrapper:last-child {
+  align-self: center;
+}
+
+main .section.wemadeit-section.section-horizontal-widths > .cards-wrapper:last-child .cards > ul {
+  align-items: flex-start;
+}
+
+main .section.wemadeit-section.section-horizontal-widths > .cards-wrapper:last-child .cards > ul > li.teaser-overlay {
+  width: 100%;
+  flex: 1 1 100%;
+   height: 250px;
+}
+
+main .section.wemadeit-section.section-horizontal-widths > .cards-wrapper:last-child .cards > ul > li.teaser-overlay .cards-card-image,
+main .section.wemadeit-section.section-horizontal-widths > .cards-wrapper:last-child .cards > ul > li.teaser-overlay picture,
+main .section.wemadeit-section.section-horizontal-widths > .cards-wrapper:last-child .cards > ul > li.teaser-overlay img {
+  min-height: 320px;
+  max-height: 320px;
+  height: 320px;
+}
+
+main .section.wemadeit-section.section-horizontal-widths > .cards-wrapper:last-child .cards > ul > li.teaser-overlay .cards-card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+}
+
 /* Section Background Colors */
 main .section.bg-theme {  
   background-color: var(--main-accent-color);

@@ -171,6 +171,14 @@
           "value": "",
           "valueType": "string",
           "description": "Custom styles for the card"
+        },
+        {
+          "component": "boolean",
+          "name": "overlaybackground",
+          "label": "Overlay Background",
+          "value": "true",
+          "valueType": "boolean",
+          "description": "Keep the teaser overlay background at 50% opacity. Turn off for a solid black overlay."
         }
       ]
     }
