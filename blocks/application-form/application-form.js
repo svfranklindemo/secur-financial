@@ -323,6 +323,8 @@ function attachApplicationFormStepEvents(wizard, form) {
     syncFormDataLayer(form, DEFAULT_FORM_FIELD_MAP);
     attachLiveFormSync(form, DEFAULT_FORM_FIELD_MAP);
   }
+  const initialIndex = getApplicationFormWizardStepIndex(wizard);
+  updateApplicationFormWizardDataLayer(wizard, initialIndex);
   dispatchCustomEvent('form-start');
 }
 
