@@ -359,7 +359,7 @@
 }
 
 .cards > ul > li.teaser-overlay.cards-card--overlay-background-off .cards-card-body {
-  background-color: rgba(0, 0, 0);
+  background-color: transparent;
 }
 .cards > ul > li.teaser-overlay .cards-card-body div[data-aue-type="richtext"] {
   width: 50%;
