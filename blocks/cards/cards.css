@@ -358,7 +358,7 @@
   align-content: center;
 }
 
-.cards > ul > li.teaser-overlay.cards-card--overlay-background-off .cards-card-body {
+.cards > ul > li.cards-card--overlay-background-off .cards-card-body {
   background-color: transparent;
 }
 .cards > ul > li.teaser-overlay .cards-card-body div[data-aue-type="richtext"] {
