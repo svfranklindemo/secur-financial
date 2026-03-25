@@ -14,7 +14,7 @@
   border: 0;
   min-height: 500px;
   height: clamp(500px, 70vh, 900px);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .iframe.block {
@@ -25,7 +25,7 @@
   min-height: 500px;
   margin: 0;
   border: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .iframe.block iframe {
