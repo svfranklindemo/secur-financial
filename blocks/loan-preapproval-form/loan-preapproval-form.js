@@ -357,7 +357,7 @@ let loanFormSubmitting = false;
 function dispatchLoanFormAbandonedEvent() {
   if (loanAbandonedEventDispatched || loanFormSubmitting) return;
   loanAbandonedEventDispatched = true;
-  dispatchCustomEvent('form-abandoned');
+  dispatchCustomEvent('home-loan-application-abandoned');
 }
 
 function handleLoanBeforeUnload() {
