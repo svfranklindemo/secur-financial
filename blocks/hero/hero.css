@@ -30,9 +30,30 @@
   margin: 0 auto;
   color: var(--text-light);
   text-align: center;
+}
+.hero h1,
+.hero h2{
   font-family: var(--black-font-family);
+  padding:0;
+}
+body.securbank-theme .hero h1{
+    font-size: 48px !important;
+    line-height: 1.5 !important;
+}
+body.securbank-theme .hero h2{
+    font-size: 39px !important;
+    line-height: 1.5 !important;
 }
 
+body.securbank-theme .hero.image-background-text-left > div{
+  max-width: 800px;
+}
+body.securbank-theme .hero h6 {
+    font-size: 48px !important;
+    line-height: 1.5 !important;
+    font-weight: 800 !important;
+    padding: 0;
+}
 /* Special underline (only for h1 by default) */
 .hero h1::after {
   background-color: var(--main-accent-color);

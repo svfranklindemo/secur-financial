@@ -1697,3 +1697,11 @@ main .section.home-getoffer-container > div:nth-child(1) .cards > ul > li img {
     max-width: 1200px;
     margin: 0 auto
 }
+
+body.securbank-theme main li::marker {
+  color: var(--main-accent-color);
+}
+
+body.securbank-theme main :is(ul, menu) ul {
+  list-style-type: disc;
+}

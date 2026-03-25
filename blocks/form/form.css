@@ -148,6 +148,13 @@ body.securbank-theme main .loan-preapproval-form-block .loan-preapproval-form-wi
     white-space: nowrap;
 }
 
+body.securbank-theme main .new-account-block .wizard-menu-active-item,
+body.securbank-theme main .application-form-block .wizard-menu-active-item,
+body.securbank-theme main .loan-preapproval-form-block .wizard-menu-active-item {
+    background: var(--main-accent-color) !important;
+    border-color: var(--main-accent-color) !important;
+}
+
 * {
     box-sizing: border-box;
 }
