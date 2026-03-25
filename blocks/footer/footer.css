@@ -15,6 +15,10 @@ footer .footer > div {
   padding: 40px 24px 24px;
 }
 
+body.securbank-theme footer .footer > div {
+  margin: auto;
+}
+
 footer .footer p {
   margin: 0;
 }
