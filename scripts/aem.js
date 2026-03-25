@@ -597,6 +597,16 @@ function applySectionTextColor(section, colorValue) {
   }
 }
 
+function applySectionTextAlignment(section, alignmentValue) {
+  const value = (alignmentValue ?? section.dataset.secAlignment ?? '').toString().trim().toLowerCase();
+  if (['left', 'center', 'right'].includes(value)) {
+    section.dataset.secAlignment = value;
+  } else {
+    delete section.dataset.secAlignment;
+    section.removeAttribute('data-sec-alignment');
+  }
+}
+
 /**
  * Applies horizontal layout and percentage widths to section items when sec-item-widths is set.
  * When section has multiple direct children (e.g. default-content-wrapper + sign-in-wrapper),
@@ -725,6 +735,8 @@ function setupSectionItemWidthsUE() {
       applySectionTextColor(section, colorVal);
       const customClassVal = content['sec-custom-styles'] ?? content.secCustomStyles ?? content['custom-class'] ?? content.customClass ?? '';
       applySectionCustomClass(section, customClassVal);
+      const alignmentVal = content['sec-alignment'] ?? content.secAlignment ?? '';
+      applySectionTextAlignment(section, alignmentVal);
     }
     if (event.type === 'aue:content-patch') {
       const patch = event.detail?.patch;
@@ -737,6 +749,9 @@ function setupSectionItemWidthsUE() {
       }
       if (patch?.name === 'sec-custom-styles') {
         applySectionCustomClass(section, patch.value ?? '');
+      }
+      if (patch?.name === 'sec-alignment') {
+        applySectionTextAlignment(section, patch.value ?? '');
       }
     }
   };
