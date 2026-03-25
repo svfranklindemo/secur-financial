@@ -1614,7 +1614,7 @@ main .section.home-getoffer-container > div:nth-child(4) .cards > ul > li {
   box-shadow: none;
   height: 100%;
   min-height: 0;
-  padding:20px;
+  padding:15px;
 }
 main .section.home-getoffer-container > div:nth-child(3) {
   margin-top: 0;
