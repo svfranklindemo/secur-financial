@@ -23,14 +23,14 @@ main .child-account-application .child-account-application-form {
   --form-label-color: #1e293b;
   --form-label-font-weight: 500;
   --form-label-font-size: 16px;
-  --form-field-vert-gap: 24px;
+  --form-field-vert-gap: 16px;
   --form-field-horz-gap: 24px;
 }
 
 main .child-account-application .panel-wrapper {
   display: grid !important;
   grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
-  gap: 24px !important;
+  gap: 16px !important;
   padding: 0 !important;
   border: none !important;
   margin: 0 !important;
@@ -49,7 +49,7 @@ main .child-account-application .heading-wrapper {
 main .child-account-application h2#heading-child-information {
   font-size: 2.25rem;
   font-weight: 400;
-  margin: 0 0 40px;
+  margin: 0 0 32px;
   padding: 0;
   color: #1e293b;
   line-height: 1.2;
@@ -59,7 +59,7 @@ main .child-account-application h2#heading-parent-information,
 main .child-account-application h2#heading-consent {
   font-size: 1.25rem;
   font-weight: 600;
-  margin: 40px 0 0;
+  margin: 28px 0 0;
   padding: 0;
   color: #1e293b;
   letter-spacing: 0.05em;
@@ -88,7 +88,7 @@ main .child-account-application select {
   color: #1e293b;
   background: #fff;
   transition: all 0.2s ease;
-  margin-top: 8px;
+  margin-top: 6px;
   margin-bottom: 0;
 }
 
@@ -155,7 +155,7 @@ main .child-account-application .checkbox-wrapper input[type="checkbox"] {
 }
 
 main .child-account-application .submit-wrapper {
-  margin-top: 32px;
+  margin-top: 24px;
   grid-column: span 12 !important;
   display: flex;
   justify-content: center;

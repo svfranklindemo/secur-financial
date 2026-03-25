@@ -20,7 +20,7 @@ main .set-up-auto-save .set-up-auto-save-form {
   --form-label-color: #1e293b;
   --form-label-font-weight: 500;
   --form-label-font-size: 16px;
-  --form-field-vert-gap: 24px;
+  --form-field-vert-gap: 16px;
   --form-field-horz-gap: 24px;
 }
 
@@ -40,7 +40,7 @@ main .set-up-auto-save .heading-wrapper label {
 }
 
 main .set-up-auto-save .heading-wrapper {
-  margin: 0 0 32px !important;
+  margin: 0 0 24px !important;
   padding: 0 !important;
   text-align: center;
 }
@@ -56,7 +56,7 @@ main .set-up-auto-save .set-up-auto-save-form .heading-wrapper h2 {
 }
 
 main .set-up-auto-save .field-wrapper {
-  margin: 0 0 24px;
+  margin: 0 0 16px;
 }
 
 main .set-up-auto-save label {
@@ -77,7 +77,7 @@ main .set-up-auto-save select {
   color: #1e293b;
   background: #f8fafc;
   transition: all 0.2s ease;
-  margin-top: 8px;
+  margin-top: 6px;
   margin-bottom: 0;
 }
 
@@ -90,11 +90,11 @@ main .set-up-auto-save select:focus {
 
 /* Objective checkboxes */
 main .set-up-auto-save .fieldset-wrapper {
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 main .set-up-auto-save .fieldset-wrapper .field-wrapper {
-  margin: 0 0 12px;
+  margin: 0 0 8px;
 }
 
 main .set-up-auto-save .fieldset-wrapper input[type="checkbox"] {
@@ -108,7 +108,7 @@ main .set-up-auto-save .fieldset-wrapper label {
 }
 
 main .set-up-auto-save .submit-wrapper {
-  margin-top: 32px;
+  margin-top: 24px;
 }
 
 main .set-up-auto-save .submit-wrapper button {
@@ -145,7 +145,7 @@ main .set-up-auto-save .submit-wrapper button:active {
   }
 
   main .set-up-auto-save .field-wrapper {
-    margin: 0 0 20px;
+    margin: 0 0 16px;
   }
 }
 

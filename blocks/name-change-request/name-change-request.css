@@ -23,14 +23,14 @@ main .name-change-request .name-change-request-form {
   --form-label-color: #1e293b;
   --form-label-font-weight: 500;
   --form-label-font-size: 16px;
-  --form-field-vert-gap: 24px;
+  --form-field-vert-gap: 16px;
   --form-field-horz-gap: 24px;
 }
 
 main .name-change-request .panel-wrapper {
   display: grid !important;
   grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
-  gap: 24px !important;
+  gap: 16px !important;
   padding: 0 !important;
   border: none !important;
   margin: 0 !important;
@@ -49,7 +49,7 @@ main .name-change-request .heading-wrapper {
 main .name-change-request h2#heading-name-change-request {
   font-size: 2.25rem;
   font-weight: 400;
-  margin: 0 0 40px;
+  margin: 0 0 32px;
   padding: 0;
   color: #1e293b;
   line-height: 1.2;
@@ -84,7 +84,7 @@ main .name-change-request select {
   color: #1e293b;
   background: #fff;
   transition: all 0.2s ease;
-  margin-top: 8px;
+  margin-top: 6px;
   margin-bottom: 0;
 }
 
@@ -126,7 +126,7 @@ main .name-change-request .field-wrapper[data-colspan="6"] {
 main .name-change-request .checkbox-group-wrapper {
   padding: 0;
   border: none;
-  margin: 8px 0 24px;
+  margin: 6px 0 18px;
   grid-column: span 12 !important;
 }
 
@@ -138,7 +138,7 @@ main .name-change-request .checkbox-wrapper {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  margin: 0 0 16px;
+  margin: 0 0 12px;
   padding: 0;
 }
 
@@ -161,7 +161,7 @@ main .name-change-request .checkbox-wrapper input[type="checkbox"] {
 
 main .name-change-request .file-wrapper {
   grid-column: span 12 !important;
-  margin: 0 0 24px;
+  margin: 0 0 18px;
 }
 
 main .name-change-request .file-wrapper > label {
@@ -214,7 +214,7 @@ main .name-change-request .files-list {
 }
 
 main .name-change-request .submit-wrapper {
-  margin-top: 32px;
+  margin-top: 24px;
   grid-column: span 12 !important;
   display: flex;
   justify-content: center;
