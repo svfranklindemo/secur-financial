@@ -1946,7 +1946,7 @@
         "component": "text",
         "name": "buttoneventtype",
         "label": "Button Event Type",
-        "value": "",
+        "value": "form.childAccountUpgrade.submitted",
         "valueType": "string"
       },
       {
