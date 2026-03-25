@@ -4,11 +4,12 @@ import { syncFormDataLayer, DEFAULT_FORM_FIELD_MAP, attachLiveFormSync } from ".
 import { isAuthorEnvironment } from "../../scripts/scripts.js";
 import { getPathDetails } from "../../scripts/utils.js";
 
-function applyButtonConfigToSubmitButton(block, config) {
+function applyButtonConfigToSubmitButton(block, config, defaultEventType = "form-submit") {
   const submitButton = block.querySelector("form button[type='submit']");
   if (!submitButton) return;
   const eventType = config.buttoneventtype ?? config["button-event-type"];
-  if (eventType && String(eventType).trim()) submitButton.dataset.buttonEventType = String(eventType).trim();
+  const normalizedEvent = (eventType && String(eventType).trim()) || defaultEventType;
+  if (normalizedEvent) submitButton.dataset.buttonEventType = normalizedEvent;
   const webhookUrl = config.buttonwebhookurl ?? config["button-webhook-url"];
   if (webhookUrl && String(webhookUrl).trim()) submitButton.dataset.buttonWebhookUrl = String(webhookUrl).trim();
   const formId = config.buttonformid ?? config["button-form-id"];
@@ -117,7 +118,7 @@ export default async function decorate(block) {
   await formModule.default(formContainer);
 
   setTimeout(() => {
-    applyButtonConfigToSubmitButton(block, config);
+    applyButtonConfigToSubmitButton(block, config, "form-submit");
     attachSubmitHandler(block);
     const form = block.querySelector("form");
     if (form) {
@@ -169,10 +170,8 @@ function attachSubmitHandler(block) {
         );
 
         const submitBtn = form.querySelector("button[type='submit']");
-        const authoredEventType = submitBtn?.dataset?.buttonEventType?.trim();
-        if (authoredEventType) {
-          dispatchCustomEvent(authoredEventType);
-        }
+        const authoredEventType = submitBtn?.dataset?.buttonEventType?.trim() || "form-submit";
+        dispatchCustomEvent(authoredEventType);
 
         setTimeout(() => {
           window.location.href = getSuccessRedirectPath();
