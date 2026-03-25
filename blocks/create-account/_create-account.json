@@ -25,7 +25,7 @@
           "component": "text",
           "name": "buttoneventtype",
           "label": "Button Event Type",
-          "value": "",
+          "value": "form-submit",
           "valueType": "string"
         },
         {
