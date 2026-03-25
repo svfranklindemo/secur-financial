@@ -67,6 +67,16 @@ function syncWindowDataLayer() {
   window.dataLayer = _dataLayer;
 }
 
+function getPageNameFromPathname(pathname) {
+  const normalized = (pathname || '').replace(/\/+$/, '');
+  if (!normalized || normalized === '/') return 'home';
+  const segments = normalized.split('/').filter(Boolean);
+  if (!segments.length) return 'home';
+  const lastSegment = (segments[segments.length - 1] || '').toLowerCase();
+  const isLocaleOnly = /^[a-z]{2}(?:-[a-z]{2})?$/.test(lastSegment);
+  return isLocaleOnly ? 'home' : lastSegment;
+}
+
 function dispatchDataLayerEvent(eventType = 'initialized') {
   document.dispatchEvent(
     new CustomEvent('dataLayerUpdated', {
@@ -144,7 +154,8 @@ export function buildCustomDataLayer() {
     applyEcidToDataLayer();
     if (!_dataLayer.page) _dataLayer.page = {};
     _dataLayer.page.title = document.title || _dataLayer.page.title;
-    _dataLayer.page.name = (document.title || '').toLowerCase() || _dataLayer.page.name;
+    const pathName = (window.location && window.location.pathname) || '';
+    _dataLayer.page.name = getPageNameFromPathname(pathName) || _dataLayer.page.name;
     syncWindowDataLayer();
 
     try {
