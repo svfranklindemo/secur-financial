@@ -1572,17 +1572,18 @@ main .section.home-getoffer-container > div:nth-child(2) .get-offer-wrapper {
 main .section.home-getoffer-container > div:nth-child(2) .get-offer-input {
   width: 100%;
   max-width: none;
-  padding: 1rem 1.25rem;
+  padding: 0.4rem 1.25rem;
   font-size: 1.05rem;
 }
 main .section.home-getoffer-container > div:nth-child(2) .get-offer-button {
-  width: auto;
-  min-width: 168px;
-  padding: 0.95rem 2rem;
-  align-self: flex-start;
-  background: #cbe6f0;
-  color: #1a232f;
-  font-weight: 700;
+    width: auto;
+    /* min-width: 140px; */
+    padding: 0.6rem 2rem;
+    align-self: flex-start;
+    background: #cbe6f0;
+    color: #1a232f;
+    font-weight: 700;
+    text-align: center;
 }
 /* Right column cards: no border, no box-shadow; each fills half the column height; small gap between them */
 main .section.home-getoffer-container > div:nth-child(3),
@@ -1667,4 +1668,16 @@ main .section.home-getoffer-container > div:nth-child(1) .cards > ul > li img {
     margin: unset;
     margin-bottom: 10px;
     margin-top: 10px;
+}
+ .securbank-theme .TopRibbon {
+    color: #fff;
+    background-color: #171c28;
+    background-image: url(https://demo-system-next.s3.eu-north-1.amazonaws.com/assets/securfinancial/visual-2.png);
+    background-size: auto;
+    background-position: 50% 40%;
+    background-repeat: no-repeat
+}
+.Page .TopRibbon__content {
+    max-width: 1200px;
+    margin: 0 auto
 }
