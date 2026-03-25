@@ -51,7 +51,7 @@ export default function decorate(block) {
     
     // Read image style by prop when author metadata exists, or by the known config column on publish.
     const imageStyle = getConfigValue('imagestyle', 3) || '';
-    const overlayBackgroundEnabled = (getConfigValue('overlaybackground', 13) || 'true').toLowerCase() !== 'false';
+    const overlayBackgroundEnabled = (getConfigValue('overlaybackground', 14) || 'true').toLowerCase() !== 'false';
 
     const getCell = (idx) => (row.children[idx]?.querySelector?.('p')?.textContent?.trim()
       || row.children[idx]?.textContent?.trim() || '').toString();

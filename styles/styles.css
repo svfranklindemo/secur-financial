@@ -634,6 +634,9 @@ button {
 .section.section-horizontal-widths.cards-container{
     padding: 0 32px;
 }
+.securbank-theme .section.section-horizontal-widths.cards-container{
+    padding: 0 ;
+}
 .section.section-horizontal-widths.cards-container div {
     padding: 0;
 }

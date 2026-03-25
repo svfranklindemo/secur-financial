@@ -16,7 +16,7 @@ footer .footer > div {
 }
 
 body.securbank-theme footer .footer > div {
-  margin: auto;
+   max-width: 1260px;
 }
 
 footer .footer p {
