@@ -39,6 +39,7 @@
 body.securbank-theme .hero h1{
     font-size: 48px !important;
     line-height: 1.5 !important;
+    font-family:var(--heading-font-family ) !important;
 }
 body.securbank-theme .hero h2{
     font-size: 39px !important;
@@ -53,6 +54,7 @@ body.securbank-theme .hero h6 {
     line-height: 1.5 !important;
     font-weight: 800 !important;
     padding: 0;
+    font-family: var(--black-font-family);
 }
 /* Special underline (only for h1 by default) */
 .hero h1::after {

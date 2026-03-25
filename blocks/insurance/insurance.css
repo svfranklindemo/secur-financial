@@ -7,12 +7,13 @@
 }
 
 main > .section:has(.insurance-block) > div {
-  max-width: 720px;
+  max-width: 1200px;
+  background: #fff;
 }
 
 .insurance-block {
   width: 100%;
-  max-width: 100%;
+  max-width: 720px;
   margin: 0 auto;
   padding: 0 2rem 2rem;
   font-family: var(--body-font-family, system-ui, sans-serif);

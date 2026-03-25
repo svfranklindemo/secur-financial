@@ -806,6 +806,10 @@ main > .section {
   min-height: 50px;
 }
 
+body.securbank-theme main > .section {
+  margin-top: 0;
+}
+
 /* When full width is not selected, constrain section to content width and center */
 main > .section:not([data-sec-full-width="true"]) {
   max-width: 1200px;

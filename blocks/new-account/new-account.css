@@ -8,12 +8,13 @@
 }
 
 main > .section:has(.new-account-block) > div {
-  max-width: 720px;
+  max-width: 1200px;
+  background: #fff;
 }
 
 .new-account-block {
   width: 100%;
-  max-width: 100%;
+  max-width: 720px;
   margin: 0 auto;
   padding: 0 2rem 1.25rem;
   font-family: var(--body-font-family, system-ui, sans-serif);
