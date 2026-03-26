@@ -13,6 +13,40 @@ const FALLBACK_PRODUCT = {
 const AUTHOR_PRODUCT_ENDPOINT = 'https://author-p189874-e1977911.adobeaemcloud.com/graphql/execute.json/secur-financial/product-card-information';
 const PUBLISH_PRODUCT_ENDPOINT = 'https://275323-918sangriatortoise.adobeioruntime.net/api/v1/web/dx-excshell-1/secure-financial-product-card-information';
 const PUBLISH_ENVIRONMENT = 'p189874-e1977911';
+const PRODUCT_CARD_REVEAL_TIMEOUT_MS = 5000;
+
+const productCardRevealState = {
+  initialized: false,
+  revealed: false,
+  pendingBlocks: new Set(),
+  fallbackTimer: null,
+};
+
+function revealAllProductCardWrappers() {
+  if (productCardRevealState.revealed) return;
+  productCardRevealState.revealed = true;
+  if (productCardRevealState.fallbackTimer) {
+    clearTimeout(productCardRevealState.fallbackTimer);
+    productCardRevealState.fallbackTimer = null;
+  }
+  document.querySelectorAll('.product-card-wrapper').forEach((wrapper) => wrapper.classList.add('show'));
+}
+
+function initializeProductCardRevealState() {
+  if (productCardRevealState.initialized) return;
+  productCardRevealState.initialized = true;
+  document.querySelectorAll('.product-card').forEach((block) => productCardRevealState.pendingBlocks.add(block));
+  productCardRevealState.fallbackTimer = window.setTimeout(() => {
+    revealAllProductCardWrappers();
+  }, PRODUCT_CARD_REVEAL_TIMEOUT_MS);
+}
+
+function markProductCardReady(block) {
+  productCardRevealState.pendingBlocks.delete(block);
+  if (productCardRevealState.pendingBlocks.size === 0) {
+    revealAllProductCardWrappers();
+  }
+}
 
 function resolvePath(obj, path) {
   if (!obj || !path) return undefined;
@@ -284,6 +318,7 @@ function createButtonFromConfig(config) {
 }
 
 export default async function decorate(block) {
+  initializeProductCardRevealState();
   const previousVisibility = block.style.visibility;
   const previousPointerEvents = block.style.pointerEvents;
   block.style.visibility = 'hidden';
@@ -332,11 +367,8 @@ export default async function decorate(block) {
     list.append(card);
     wrapper.append(list);
     block.append(wrapper);
-    const wrapperElement = block.closest('.product-card-wrapper');
-    if (wrapperElement) {
-      wrapperElement.classList.add('show');
-    }
   } finally {
+    markProductCardReady(block);
     block.classList.remove('product-card-block--loading');
     block.style.visibility = previousVisibility;
     block.style.pointerEvents = previousPointerEvents;
