@@ -51,10 +51,18 @@ export default function decorate(block) {
     
     // Read image style by prop when author metadata exists, or by the known config column on publish.
     const imageStyle = getConfigValue('imagestyle', 3) || '';
-    const overlayBackgroundEnabled = (getConfigValue('overlaybackground', 14) || 'true').toLowerCase() !== 'false';
 
     const getCell = (idx) => (row.children[idx]?.querySelector?.('p')?.textContent?.trim()
       || row.children[idx]?.textContent?.trim() || '').toString();
+
+    const getConfigCells = () => [...row.children]
+      .slice(2)
+      .map((child) => child.querySelector?.('p')?.textContent?.trim() || child.textContent?.trim() || '');
+
+    const publishConfigCells = getConfigCells();
+    const lastConfigValue = publishConfigCells[publishConfigCells.length - 1] || '';
+    const prevConfigValue = publishConfigCells[publishConfigCells.length - 2] || '';
+    const lastConfigIsBoolean = /^(true|false)$/i.test(lastConfigValue);
 
     /** True if string looks like a hex color (#xxx, #xxxxxx, or 3/6 hex chars). */
     const isHexColor = (s) => {
@@ -90,7 +98,13 @@ export default function decorate(block) {
     const buttonFormId = getCell(10);
     const buttonData = getCell(11);
     // Read custom styles by data-aue-prop so it works regardless of column order (UE authoring)
-    const customStylesRaw = getConfigValue('customstyles', 12) || getCell(12) || '';
+    let customStylesRaw = getConfigValue('customstyles', 12) || getCell(12) || '';
+    if (!customStylesRaw) {
+      customStylesRaw = lastConfigIsBoolean ? prevConfigValue : lastConfigValue;
+    }
+
+    const overlayBackgroundValue = getConfigValue('overlaybackground', 14)
+      || (lastConfigIsBoolean ? lastConfigValue : '');
 
     if (customStylesRaw) {
       customStylesRaw.split(/[\s,]+/).forEach((part) => {
@@ -99,7 +113,7 @@ export default function decorate(block) {
       });
     }
 
-    if (!overlayBackgroundEnabled) {
+    if (((overlayBackgroundValue || 'true').toLowerCase() === 'false')) {
       li.classList.add('cards-card--overlay-background-off');
     }
 
