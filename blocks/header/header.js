@@ -647,11 +647,11 @@ export default async function decorate(block) {
       });
     });
 
-    // Hide nav items between position 4 and last (exclusive) for unauthenticated users
+    // Hide all nav items after the first 4 for unauthenticated users
     const navItems = navSections.querySelectorAll(':scope .default-content-wrapper > ul > li');
     const isUserLoggedIn = localStorage.getItem('secur_financial_user_logged_in') === 'true';
-    if (!isUserLoggedIn && navItems.length > 5) {
-      for (let i = 4; i < navItems.length - 1; i++) {
+    if (!isUserLoggedIn && navItems.length > 4) {
+      for (let i = 4; i < navItems.length; i++) {
         navItems[i].classList.add('nav-auth-hidden');
       }
     }
