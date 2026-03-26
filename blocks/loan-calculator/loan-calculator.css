@@ -1,4 +1,12 @@
 /* Loan Calculator – two-column layout, sliders, teal Apply now */
+.loan-calculator-wrapper {
+  display: none !important;
+}
+
+.loan-calculator-wrapper.show {
+  display: block !important;
+}
+
 .loan-calculator-block {
   max-width: 960px;
   margin: 0 auto;
