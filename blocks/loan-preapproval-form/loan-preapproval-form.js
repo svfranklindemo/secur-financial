@@ -11,7 +11,74 @@ import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 import { syncFormDataLayer, DEFAULT_FORM_FIELD_MAP, attachLiveFormSync } from '../../scripts/form-data-layer.js';
 
 const LOAN_PREAPPROVAL_FORM_WIZARD_TITLE = 'Home Loan Application Form';
-const LOAN_PREAPPROVAL_FORM_WIZARD_NAME = "home-loan-application"
+const LOAN_PREAPPROVAL_FORM_WIZARD_NAME = 'home-loan-application';
+const LOAN_PREAPPROVAL_PREFILL_FIELD_MAP = {
+  firstName: DEFAULT_FORM_FIELD_MAP.firstName,
+  lastName: DEFAULT_FORM_FIELD_MAP.lastName,
+  email: DEFAULT_FORM_FIELD_MAP.email,
+  phone: DEFAULT_FORM_FIELD_MAP.phone,
+  streetAddress: DEFAULT_FORM_FIELD_MAP.streetAddress,
+  state: DEFAULT_FORM_FIELD_MAP.state,
+  zipCode: DEFAULT_FORM_FIELD_MAP.zipCode,
+  city: DEFAULT_FORM_FIELD_MAP.city,
+  country: DEFAULT_FORM_FIELD_MAP.country,
+};
+
+function getNestedProperty(obj, path) {
+  if (!obj || !path) return undefined;
+  return path.split('.').reduce((current, key) => current?.[key], obj);
+}
+
+function hasExistingFieldValue(field) {
+  if (!field) return false;
+  return String(field.value || '').trim() !== '';
+}
+
+function setFieldValue(field, value) {
+  if (!field || value === undefined || value === null) return false;
+  if (field.tagName.toLowerCase() === 'select') {
+    const normalized = String(value).trim();
+    const optionExists = Array.from(field.options || []).some((option) => option.value === normalized);
+    if (!optionExists) return false;
+    field.value = normalized;
+    return true;
+  }
+  field.value = String(value).trim();
+  return true;
+}
+
+function prefillLoanPreapprovalFormFromDataLayer(form) {
+  if (!form || !window.dataLayer) return false;
+  let hasPrefill = false;
+  Object.entries(LOAN_PREAPPROVAL_PREFILL_FIELD_MAP).forEach(([fieldName, dataLayerPath]) => {
+    const field = form.querySelector(`[name="${fieldName}"]`);
+    if (!field || hasExistingFieldValue(field)) return;
+    const value = getNestedProperty(window.dataLayer, dataLayerPath);
+    if (value === undefined || value === null || String(value).trim() === '') return;
+    const isSet = setFieldValue(field, value);
+    if (!isSet) return;
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+    field.dispatchEvent(new Event('change', { bubbles: true }));
+    hasPrefill = true;
+  });
+  return hasPrefill;
+}
+
+function setupLoanPreapprovalFormPrefill(form) {
+  if (!form) return;
+  const syncPrefillToDataLayer = () => {
+    const didPrefill = prefillLoanPreapprovalFormFromDataLayer(form);
+    if (didPrefill) {
+      syncFormDataLayer(form, DEFAULT_FORM_FIELD_MAP);
+    }
+  };
+
+  syncPrefillToDataLayer();
+
+  if (!window._dataLayerReady) {
+    document.addEventListener('dataLayerUpdated', syncPrefillToDataLayer, { once: true });
+  }
+}
 
 function buildStepMeta(stepIndex) {
   return {
@@ -341,11 +408,12 @@ export default async function decorate(block) {
   setTimeout(() => {
     applyButtonConfigToSubmitButton(block, config, 'home-loan-application-submit');
     attachLoanPreapprovalFormSubmitHandler(block);
-    setupLoanPreapprovalStepIndicator(block);
     const form = block.querySelector('form');
     if (form) {
+      setupLoanPreapprovalFormPrefill(form);
       applyFormCustomStyles(form, config);
     }
+    setupLoanPreapprovalStepIndicator(block);
   }, 100);
   setupLoanPreapprovalAbandonEvents();
 }
