@@ -27,7 +27,6 @@ import {
   createSource,
   getHostname
 } from './utils.js';
-import { initializeCustomEvents } from './custom-events.js';
 
 // Import dataLayer management (available immediately)
 import './datalayer.js';
@@ -329,7 +328,6 @@ async function renderWBDataLayer() {
  */
 async function loadEager(doc) {
   setPageLanguage();
-  initializeCustomEvents();
   // Preconnect dynamically to speed up LCP fetch without hardcoding hosts
   try {
     addPreconnect(window.location.origin);

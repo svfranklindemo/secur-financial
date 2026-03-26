@@ -9,6 +9,7 @@ import {
 import {
   isInternalPage,
 } from './utils.js';
+import { initializeCustomEvents } from './custom-events.js';
 
 // Adobe Target - start
 
@@ -98,6 +99,8 @@ function buildTwitterLinks() {
     });
   });
 }
+
+initializeCustomEvents();
 
 if (!window.location.hostname.includes('localhost')) {
   embedCustomLibraries();
