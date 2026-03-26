@@ -7,6 +7,11 @@
   background: #fff;
 }
 
+.loan-calculator-block.loan-calculator-block--loading {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 /* Config (UE fields) in single hidden container so UE shows one component, not three */
 .loan-calculator-config {
   display: none !important;

@@ -284,47 +284,57 @@ function createButtonFromConfig(config) {
 }
 
 export default async function decorate(block) {
+  const previousVisibility = block.style.visibility;
+  const previousPointerEvents = block.style.pointerEvents;
+  block.style.visibility = 'hidden';
+  block.style.pointerEvents = 'none';
+  [...block.children].forEach((row) => { row.style.display = 'none'; });
   block.classList.add('product-card-block', 'product-card-block--loading');
-  const config = readBlockConfig(block) || {};
-  const rawContentFragmentPath =
-    config['content-fragment-folder'] || config.contentfragmentfolder || config.contentFragmentFolder || '';
-  const contentFragmentPath = normalizeContentFragmentPath(rawContentFragmentPath);
-  if (contentFragmentPath) {
-    block.dataset.contentFragmentPath = contentFragmentPath;
+  try {
+    const config = readBlockConfig(block) || {};
+    const rawContentFragmentPath =
+      config['content-fragment-folder'] || config.contentfragmentfolder || config.contentFragmentFolder || '';
+    const contentFragmentPath = normalizeContentFragmentPath(rawContentFragmentPath);
+    if (contentFragmentPath) {
+      block.dataset.contentFragmentPath = contentFragmentPath;
+    }
+    const layout = ['side-by-side', 'stacked', 'compact-stacked-card'].includes((config.layout || '').toLowerCase())
+      ? config.layout.toLowerCase()
+      : 'stacked';
+    const hideDescription = isTruthy(config.hidedescription ?? config.hideDescription);
+    const addBorder = isTruthy(config.addborder ?? config.addBorder);
+    const buttonConfig = createButtonFromConfig({
+      text: config.buttontext,
+      link: config.link,
+      eventType: config.buttoneventtype,
+      webhook: config.buttonwebhookurl,
+      formId: config.buttonformid,
+      buttonData: config.buttondata,
+      style: config.ctastyle ?? 'default',
+      customStyles: config.customstyles ?? config.customStyles,
+    });
+    [...block.children].forEach((row) => row.remove());
+    block.innerHTML = '';
+
+    const product = await fetchProductData(contentFragmentPath);
+    const productPayload = buildDatalayerProductPayload(product);
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'cards product-card-block';
+    wrapper.classList.add(`product-card-layout-${layout}`);
+    if (hideDescription) wrapper.classList.add('product-card-hide-description');
+    if (addBorder) wrapper.classList.add('product-card-add-border');
+    const list = document.createElement('ul');
+    const productButtonConfig = appendProductIdToButton(buttonConfig, product);
+    attachProductDataLayerHandler(productButtonConfig, productPayload);
+    const card = createCard(product, productButtonConfig);
+    makeCardClickable(card, productButtonConfig, productPayload);
+    list.append(card);
+    wrapper.append(list);
+    block.append(wrapper);
+  } finally {
+    block.classList.remove('product-card-block--loading');
+    block.style.visibility = previousVisibility;
+    block.style.pointerEvents = previousPointerEvents;
   }
-  const layout = ['side-by-side', 'stacked', 'compact-stacked-card'].includes((config.layout || '').toLowerCase())
-    ? config.layout.toLowerCase()
-    : 'stacked';
-  const hideDescription = isTruthy(config.hidedescription ?? config.hideDescription);
-  const addBorder = isTruthy(config.addborder ?? config.addBorder);
-  const buttonConfig = createButtonFromConfig({
-    text: config.buttontext,
-    link: config.link,
-    eventType: config.buttoneventtype,
-    webhook: config.buttonwebhookurl,
-    formId: config.buttonformid,
-    buttonData: config.buttondata,
-    style: config.ctastyle ?? 'default',
-    customStyles: config.customstyles ?? config.customStyles,
-  });
-  [...block.children].forEach((row) => row.remove());
-  block.innerHTML = '';
-
-  const product = await fetchProductData(contentFragmentPath);
-  const productPayload = buildDatalayerProductPayload(product);
-
-  const wrapper = document.createElement('div');
-  wrapper.className = 'cards product-card-block';
-  wrapper.classList.add(`product-card-layout-${layout}`);
-  if (hideDescription) wrapper.classList.add('product-card-hide-description');
-  if (addBorder) wrapper.classList.add('product-card-add-border');
-  const list = document.createElement('ul');
-  const productButtonConfig = appendProductIdToButton(buttonConfig, product);
-  attachProductDataLayerHandler(productButtonConfig, productPayload);
-  const card = createCard(product, productButtonConfig);
-  makeCardClickable(card, productButtonConfig, productPayload);
-  list.append(card);
-  wrapper.append(list);
-  block.append(wrapper);
-  block.classList.remove('product-card-block--loading');
 }

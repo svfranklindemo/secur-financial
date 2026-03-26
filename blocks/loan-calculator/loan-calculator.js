@@ -105,7 +105,7 @@ function fireButtonCustomEventIfConfigured(eventType) {
 
 export default async function decorate(block) {
   const config = normalizeConfig(readBlockConfig(block) || {});
-  block.classList.add('loan-calculator-block');
+  block.classList.add('loan-calculator-block', 'loan-calculator-block--loading');
   if (config.customStyles) {
     config.customStyles
       .split(/\s+/)
@@ -259,6 +259,8 @@ export default async function decorate(block) {
   }
 
   const contentRoot = buildCalculatorRoot();
-
+  [...block.children].forEach((row) => row.remove());
+  block.innerHTML = '';
   block.appendChild(contentRoot);
+  block.classList.remove('loan-calculator-block--loading');
 }
