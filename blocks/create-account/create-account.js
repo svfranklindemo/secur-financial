@@ -56,7 +56,7 @@ function buildCreateAccountFormDef() {
           {
             id: "email",
             name: "email",
-            fieldType: "email",
+            fieldType: "text-input",
             label: { value: "Email address" },
             autoComplete: "email",
             properties: { colspan: 12 },

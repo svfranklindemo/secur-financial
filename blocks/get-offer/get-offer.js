@@ -20,7 +20,7 @@ export default async function decorate(block) {
   wrapper.className = 'get-offer-wrapper';
 
   const input = document.createElement('input');
-  input.type = 'email';
+  input.type = 'text';
   input.name = 'email';
   input.placeholder = placeholder;
   input.className = 'get-offer-input';

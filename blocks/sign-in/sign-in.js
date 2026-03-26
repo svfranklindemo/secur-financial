@@ -50,7 +50,7 @@ export default async function decorate(block) {
           {
             id: "email",
             name: "email",
-            fieldType: "email",
+            fieldType: "text-input",
             label: { value: "Email address" },
             required: true,
             autoComplete: "email",
