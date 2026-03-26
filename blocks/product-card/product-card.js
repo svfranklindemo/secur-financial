@@ -332,6 +332,10 @@ export default async function decorate(block) {
     list.append(card);
     wrapper.append(list);
     block.append(wrapper);
+    const wrapperElement = block.closest('.product-card-wrapper');
+    if (wrapperElement) {
+      wrapperElement.classList.add('show');
+    }
   } finally {
     block.classList.remove('product-card-block--loading');
     block.style.visibility = previousVisibility;
