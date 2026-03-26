@@ -174,7 +174,7 @@ function collectApplicationFormData(form) {
 }
 
 function restrictNumericFields(form) {
-  const numericNames = ['phone', 'ssn'];
+  const numericNames = ['ssn'];
   numericNames.forEach((name) => {
     const el = form.querySelector(`[name="${name}"]`);
     if (!el) return;
