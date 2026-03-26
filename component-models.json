@@ -1088,7 +1088,7 @@
         "component": "text",
         "name": "buttoneventtype",
         "label": "Button Event Type",
-        "value": "form-submit",
+        "value": "new-account-form-submit",
         "valueType": "string"
       },
       {

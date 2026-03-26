@@ -10,7 +10,73 @@ import { readBlockConfig, loadCSS, applyFormCustomStyles } from '../../scripts/a
 import { dispatchCustomEvent } from '../../scripts/custom-events.js';
 import { syncFormDataLayer, DEFAULT_FORM_FIELD_MAP, attachLiveFormSync } from '../../scripts/form-data-layer.js';
 
-function applyButtonConfigToSubmitButton(block, config, defaultEventType = 'form-submit') {
+const NEW_ACCOUNT_PREFILL_FIELD_MAP = {
+  firstName: DEFAULT_FORM_FIELD_MAP.firstName,
+  lastName: DEFAULT_FORM_FIELD_MAP.lastName,
+  email: DEFAULT_FORM_FIELD_MAP.email,
+  phone: DEFAULT_FORM_FIELD_MAP.phone,
+  streetAddress: DEFAULT_FORM_FIELD_MAP.streetAddress,
+  state: DEFAULT_FORM_FIELD_MAP.state,
+  zipCode: DEFAULT_FORM_FIELD_MAP.zipCode,
+  city: DEFAULT_FORM_FIELD_MAP.city,
+  country: DEFAULT_FORM_FIELD_MAP.country,
+  dateOfBirth: DEFAULT_FORM_FIELD_MAP.dateOfBirth,
+};
+
+function getNestedProperty(obj, path) {
+  if (!obj || !path) return undefined;
+  return path.split('.').reduce((current, key) => current?.[key], obj);
+}
+
+function hasExistingFieldValue(field) {
+  if (!field) return false;
+  return String(field.value || '').trim() !== '';
+}
+
+function setFieldValue(field, value) {
+  if (!field || value === undefined || value === null) return false;
+  if (field.tagName.toLowerCase() === 'select') {
+    const normalized = String(value).trim();
+    const optionExists = Array.from(field.options || []).some((option) => option.value === normalized);
+    if (!optionExists) return false;
+    field.value = normalized;
+    return true;
+  }
+  field.value = String(value).trim();
+  return true;
+}
+
+function prefillNewAccountFormFromDataLayer(form) {
+  if (!form || !window.dataLayer) return false;
+  let hasPrefill = false;
+  Object.entries(NEW_ACCOUNT_PREFILL_FIELD_MAP).forEach(([fieldName, dataLayerPath]) => {
+    const field = form.querySelector(`[name="${fieldName}"]`);
+    if (!field || hasExistingFieldValue(field)) return;
+    const value = getNestedProperty(window.dataLayer, dataLayerPath);
+    if (value === undefined || value === null || String(value).trim() === '') return;
+    const isSet = setFieldValue(field, value);
+    if (!isSet) return;
+    field.dispatchEvent(new Event('input', { bubbles: true }));
+    field.dispatchEvent(new Event('change', { bubbles: true }));
+    hasPrefill = true;
+  });
+  return hasPrefill;
+}
+
+function setupNewAccountFormPrefill(form) {
+  if (!form) return;
+  const applyPrefill = () => {
+    prefillNewAccountFormFromDataLayer(form);
+  };
+
+  applyPrefill();
+
+  if (!window._dataLayerReady) {
+    document.addEventListener('dataLayerUpdated', applyPrefill, { once: true });
+  }
+}
+
+function applyButtonConfigToSubmitButton(block, config, defaultEventType = 'new-account-form-submit') {
   const submitButton = block.querySelector("form button[type='submit']");
   if (!submitButton) return;
   const eventType = config.buttoneventtype;
@@ -172,7 +238,7 @@ function attachSubmitHandler(block) {
     console.log('New account form data:', data);
     clearProductObject();
     const submitBtn = form.querySelector("button[type='submit']");
-    const authoredEventType = submitBtn?.dataset?.buttonEventType?.trim() || 'form-submit';
+    const authoredEventType = submitBtn?.dataset?.buttonEventType?.trim() || 'new-account-form-submit';
     dispatchCustomEvent(authoredEventType);
     redirectAfterSubmit();
   });
@@ -310,14 +376,15 @@ export default async function decorate(block) {
   await formModule.default(formContainer);
 
   setTimeout(() => {
-    applyButtonConfigToSubmitButton(block, config, 'form-submit');
+    applyButtonConfigToSubmitButton(block, config, 'new-account-form-submit');
     attachSubmitHandler(block);
-    setupStepIndicator(block);
     const form = block.querySelector('form');
     if (form) {
+      setupNewAccountFormPrefill(form);
       applyFormCustomStyles(form, config);
       restrictNumericFields(form);
       formatDateOfBirthInput(form);
     }
+    setupStepIndicator(block);
   }, 100);
 }
