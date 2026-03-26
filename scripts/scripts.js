@@ -469,7 +469,43 @@ function ensureConsentModalHandled() {
  */
 async function loadLazy(doc) {
   const main = doc.querySelector('main');
-  await loadSections(main);
+  const deferredSelector = '.section.home-getoffer-container';
+  const deferredSections = [...main.querySelectorAll(deferredSelector)];
+  const regularSections = [...main.querySelectorAll('div.section:not(.home-getoffer-container)')];
+
+  for (let i = 0; i < regularSections.length; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    await loadSection(regularSections[i]);
+  }
+
+  deferredSections.forEach((section) => {
+    const measuredHeight = Math.max(section.offsetHeight || 0, 480);
+    section.style.minHeight = `${measuredHeight}px`;
+
+    const finalizeDeferredLoad = async () => {
+      if (section.dataset.sectionStatus === 'loading' || section.dataset.sectionStatus === 'loaded') return;
+      await loadSection(section);
+      section.style.minHeight = '';
+    };
+
+    if (!('IntersectionObserver' in window)) {
+      finalizeDeferredLoad();
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        observer.disconnect();
+        finalizeDeferredLoad();
+      }
+    }, {
+      rootMargin: '300px 0px',
+      threshold: 0.01,
+    });
+
+    observer.observe(section);
+  });
+
   decorateSectionImages(doc);
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;

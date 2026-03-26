@@ -235,6 +235,16 @@ header nav .nav-brand img {
   height: auto;
 }
 
+header nav .nav-brand a,
+header nav .nav-brand picture {
+  display: block;
+}
+
+header nav .nav-brand picture {
+  width: 100px;
+  aspect-ratio: 1383 / 378;
+}
+
 .wehealthcare-theme header nav .nav-brand img {
   width: auto;
   height: 36.5px;
@@ -248,6 +258,12 @@ header nav .nav-brand img {
 .securbank-theme header nav .nav-brand img {
   width: auto;
   height: 36.5px;
+}
+
+.wehealthcare-theme header nav .nav-brand picture,
+.fly-theme header nav .nav-brand picture,
+.securbank-theme header nav .nav-brand picture {
+  width: 133.5px;
 }
 
 /* sections */
