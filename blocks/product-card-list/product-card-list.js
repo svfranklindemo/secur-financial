@@ -147,6 +147,10 @@ function buildChildConfigs(block) {
   return childConfigs;
 }
 
+function normalizeSku(value) {
+  return String(value || '').trim().toLowerCase();
+}
+
 function appendProductIdToButton(anchor, product) {
   if (!anchor || !product?.sku) return;
   const productId = String(product.sku || product.id || '').trim();
@@ -268,14 +272,24 @@ export default function decorate(block) {
   // and not the array/list payload needed for this block.
   // Re-enable by switching back to the API fetch path once endpoint supports list payloads.
   const products = getDummyProducts();
-  const bySku = new Map(products.map((product) => [String(product.sku || '').trim(), product]));
+  const bySku = new Map(products.map((product) => [normalizeSku(product.sku), product]));
 
-  const renderItems = childConfigs.length
-    ? childConfigs.map((item) => {
-      const matched = bySku.get(item.sku);
-      if (!matched) return null;
-      return { item, product: matched };
-    }).filter(Boolean)
+  const mappedItems = childConfigs.map((item, index) => {
+    const matchedBySku = item.sku ? bySku.get(normalizeSku(item.sku)) : null;
+    const matchedByIndex = products[index] || null;
+    const matchedProduct = matchedBySku || matchedByIndex;
+    if (!matchedProduct) return null;
+    return {
+      item: {
+        ...item,
+        sku: item.sku || matchedProduct.sku,
+      },
+      product: matchedProduct,
+    };
+  }).filter(Boolean);
+
+  const renderItems = mappedItems.length
+    ? mappedItems
     : products.map((product) => ({
       item: {
         sku: product.sku,
