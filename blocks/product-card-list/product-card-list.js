@@ -131,15 +131,13 @@ function buildChildConfigs(block) {
   const childConfigs = [];
 
   rows.forEach((row) => {
+    const isProductItemRow = row.getAttribute('data-aue-model') === 'product-item'
+      || !!row.querySelector('[data-aue-model="product-item"]')
+      || !!row.querySelector('[data-aue-prop="sku"],[data-aue-prop="customStyles"],[data-aue-prop="customstyles"]');
+    if (!isProductItemRow) return;
+
     const sku = getRowValue(row, ['sku', 'productsku'], 0);
     const customStyles = getRowValue(row, ['customStyles', 'customstyles'], 1);
-    const hasAuthoringMetadata = row.hasAttribute('data-aue-resource')
-      || row.hasAttribute('data-aue-model')
-      || !!row.querySelector('[data-aue-resource],[data-aue-model]');
-
-    if (!sku && !customStyles && !hasAuthoringMetadata) {
-      return;
-    }
 
     childConfigs.push({
       sku: String(sku || '').trim(),
@@ -153,6 +151,19 @@ function buildChildConfigs(block) {
 
 function normalizeSku(value) {
   return String(value || '').trim().toLowerCase();
+}
+
+function createAuthoringFallbackProduct(index) {
+  return {
+    id: `authoring-item-${index + 1}`,
+    name: `Product item ${index + 1}`,
+    category: '',
+    description: '',
+    sku: '',
+    image: '',
+    buttonText: '',
+    link: '',
+  };
 }
 
 function appendProductIdToButton(anchor, product) {
@@ -254,6 +265,18 @@ function createCard(product, itemConfig, defaults) {
   return li;
 }
 
+function appendAuthoringConfigCells(card, sourceRow) {
+  if (!card || !sourceRow) return;
+  const configCells = [...sourceRow.children];
+  if (!configCells.length) return;
+
+  configCells.forEach((cell) => {
+    cell.classList.add('product-card-config');
+    cell.style.display = 'none';
+    card.append(cell);
+  });
+}
+
 export default function decorate(block) {
   const config = readBlockConfig(block) || {};
   const defaultView = normalizeView(config.defaultview || config.defaultView || 'stacked');
@@ -281,8 +304,7 @@ export default function decorate(block) {
   const mappedItems = childConfigs.map((item, index) => {
     const matchedBySku = item.sku ? bySku.get(normalizeSku(item.sku)) : null;
     const matchedByIndex = products[index] || null;
-    const matchedProduct = matchedBySku || matchedByIndex;
-    if (!matchedProduct) return null;
+    const matchedProduct = matchedBySku || matchedByIndex || createAuthoringFallbackProduct(index);
     return {
       item: {
         ...item,
@@ -290,7 +312,7 @@ export default function decorate(block) {
       },
       product: matchedProduct,
     };
-  }).filter(Boolean);
+  });
 
   const renderItems = mappedItems.length
     ? mappedItems
@@ -303,6 +325,7 @@ export default function decorate(block) {
 
   renderItems.forEach(({ item, product }) => {
     const card = createCard(product, item, defaults);
+    appendAuthoringConfigCells(card, item?.sourceRow);
     if (item?.sourceRow) {
       moveInstrumentation(item.sourceRow, card);
     }
