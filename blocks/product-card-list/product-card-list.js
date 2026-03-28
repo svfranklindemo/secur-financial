@@ -1,5 +1,5 @@
 import { readBlockConfig } from '../../scripts/aem.js';
-import { isAuthorEnvironment } from '../../scripts/scripts.js';
+import { isAuthorEnvironment, moveInstrumentation } from '../../scripts/scripts.js';
 
 const DUMMY_PRODUCT_PAYLOADS =
   {
@@ -133,14 +133,18 @@ function buildChildConfigs(block) {
   rows.forEach((row) => {
     const sku = getRowValue(row, ['sku', 'productsku'], 0);
     const customStyles = getRowValue(row, ['customStyles', 'customstyles'], 1);
+    const hasAuthoringMetadata = row.hasAttribute('data-aue-resource')
+      || row.hasAttribute('data-aue-model')
+      || !!row.querySelector('[data-aue-resource],[data-aue-model]');
 
-    if (!sku && !customStyles) {
+    if (!sku && !customStyles && !hasAuthoringMetadata) {
       return;
     }
 
     childConfigs.push({
       sku: String(sku || '').trim(),
       customStyles,
+      sourceRow: row,
     });
   });
 
@@ -298,7 +302,11 @@ export default function decorate(block) {
     }));
 
   renderItems.forEach(({ item, product }) => {
-    list.append(createCard(product, item, defaults));
+    const card = createCard(product, item, defaults);
+    if (item?.sourceRow) {
+      moveInstrumentation(item.sourceRow, card);
+    }
+    list.append(card);
   });
 
   wrapper.append(list);
