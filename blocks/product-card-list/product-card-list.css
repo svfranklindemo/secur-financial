@@ -168,7 +168,7 @@
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 480px) {
   .product-card-list-block.product-card-list-view-compact-side-by-side > .product-card-list {
     grid-template-columns: 1fr;
   }
