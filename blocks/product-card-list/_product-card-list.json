@@ -10,6 +10,7 @@
             "template": {
               "name": "Product Card List",
               "model": "product-card-list",
+              "key-value": true,
               "filter": "product-card-list",
               "item1": {
                 "sling:resourceType": "core/franklin/components/block/v1/block/item",
