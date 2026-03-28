@@ -53,7 +53,8 @@
       "add-external",
       "confirmation",
       "join-us",
-      "product-card"
+      "product-card",
+      "product-card-list"
     ]
   },
   {
@@ -86,7 +87,7 @@
       "action-button",
       "button",
       "image",
-      "text",      
+      "text",
       "title",
       "video"
     ]
@@ -125,6 +126,12 @@
       "tnc",
       "wizard",
       "range"
+    ]
+  },
+  {
+    "id": "product-card-list",
+    "components": [
+      "product"
     ]
   }
 ]
