@@ -28,11 +28,11 @@ const DUMMY_PRODUCT_PAYLOADS =
             html: '<p>Daily rewards for everyday spending.</p><ul><li>Cashback on groceries</li><li>No joining fee</li><li>Real-time spend alerts</li></ul>',
           },
           productImage: {
-            _authorUrl: 'https://author-p189874-e1977911.adobeaemcloud.com/content/dam/secur-financial/en/images/Secure-credit-cards/card-silver.png',
-            _publishUrl: 'https://publish-p189874-e1977911.adobeaemcloud.com/content/dam/secur-financial/en/images/Secure-credit-cards/card-silver.png',
-            _dynamicUrl: '/adobe/dynamicmedia/deliver/dm-aid--dummy-2/card_silver.jpg',
+            _authorUrl: 'https://author-p189874-e1977911.adobeaemcloud.com/content/dam/secur-financial/en/images/Secure-credit-cards/card-basic.png',
+            _publishUrl: 'https://publish-p189874-e1977911.adobeaemcloud.com/content/dam/secur-financial/en/images/Secure-credit-cards/card-basic.png',
+            _dynamicUrl: '/adobe/dynamicmedia/deliver/dm-aid--dummy-2/card_basic.jpg',
           },
-          _path: '/content/dam/secur-financial/en/fragments/credit-cards/securfinancial-silver',
+          _path: '/content/dam/secur-financial/en/fragments/credit-cards/securfinancial-basic',
         },
         {
           productSku: 'PLT9XJQ72',
@@ -42,11 +42,11 @@ const DUMMY_PRODUCT_PAYLOADS =
             html: '<p>Premium benefits for frequent travelers.</p><ul><li>Airport lounge access</li><li>Concierge support</li><li>Higher rewards multiplier</li></ul>',
           },
           productImage: {
-            _authorUrl: 'https://author-p189874-e1977911.adobeaemcloud.com/content/dam/secur-financial/en/images/Secure-credit-cards/card-platinum.png',
-            _publishUrl: 'https://publish-p189874-e1977911.adobeaemcloud.com/content/dam/secur-financial/en/images/Secure-credit-cards/card-platinum.png',
-            _dynamicUrl: '/adobe/dynamicmedia/deliver/dm-aid--dummy-3/card_platinum.jpg',
+            _authorUrl: 'https://author-p189874-e1977911.adobeaemcloud.com/content/dam/secur-financial/en/images/Secure-credit-cards/card-premium.png',
+            _publishUrl: 'https://publish-p189874-e1977911.adobeaemcloud.com/content/dam/secur-financial/en/images/Secure-credit-cards/card-premium.png',
+            _dynamicUrl: '/adobe/dynamicmedia/deliver/dm-aid--dummy-3/card_premium.jpg',
           },
-          _path: '/content/dam/secur-financial/en/fragments/credit-cards/securfinancial-platinum',
+          _path: '/content/dam/secur-financial/en/fragments/credit-cards/securfinancial-premium',
         }
       ],
       
