@@ -131,7 +131,7 @@
   {
     "id": "product-card-list",
     "components": [
-      "product"
+      "product-item"
     ]
   }
 ]

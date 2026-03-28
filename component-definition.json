@@ -258,12 +258,13 @@
                 "template": {
                   "name": "Product Card List",
                   "model": "product-card-list",
+                  "key-value": true,
                   "filter": "product-card-list",
                   "item1": {
                     "sling:resourceType": "core/franklin/components/block/v1/block/item",
                     "name": "Product",
-                    "model": "product",
-                    "sku": "f0I76hY77"
+                    "model": "product-item",
+                    "sku": "QCjXPYxvM"
                   }
                 }
               }
@@ -271,15 +272,15 @@
           }
         },
         {
-          "title": "Product",
-          "id": "product",
+          "title": "Product Item",
+          "id": "product-item",
           "plugins": {
             "xwalk": {
               "page": {
                 "resourceType": "core/franklin/components/block/v1/block/item",
                 "template": {
                   "name": "Product",
-                  "model": "product"
+                  "model": "product-item"
                 }
               }
             }
