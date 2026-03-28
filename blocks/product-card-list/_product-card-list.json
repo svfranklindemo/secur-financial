@@ -60,15 +60,15 @@
           "value": "stacked",
           "options": [
             {
-              "name": "Stacked",
+              "name": "Stack View",
               "value": "stacked"
             },
             {
-              "name": "Side by Side",
+              "name": "Side by Side View",
               "value": "side-by-side"
             },
             {
-              "name": "Compact Side by Side",
+              "name": "Compact Side by Side View",
               "value": "compact-side-by-side"
             }
           ]
