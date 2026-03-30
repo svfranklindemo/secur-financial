@@ -346,7 +346,7 @@ const fieldToDataLayerMap = {
   city: "person.address.city",
   dateOfBirth: "person.birthDate",
   prefEmail: "consents.marketing.email.val",
-  prefPhone: "consents.marketing.phone.val",
+  prefPhone: "consents.marketing.call.val",
   prefSms: "consents.marketing.sms.val",
 };
 
